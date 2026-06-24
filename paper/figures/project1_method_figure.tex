@@ -1,0 +1,22 @@
+\begin{figure}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=1.1cm,
+  box/.style={draw, rounded corners, align=center, minimum width=2.5cm, minimum height=1.0cm},
+  arrow/.style={-{Latex[length=2mm]}, thick}
+]
+\node[box] (input) {Soprano/Bass\\Roman plan};
+\node[box, right=of input] (tok) {Score\\Tokenizer};
+\node[box, right=of tok] (model) {Transformer};
+\node[box, right=of model] (rules) {Rule-Guided\\Decoding};
+\node[box, right=of rules] (output) {SATB MusicXML\\Explainable Report};
+\draw[arrow] (input) -- (tok);
+\draw[arrow] (tok) -- (model);
+\draw[arrow] (model) -- (rules);
+\draw[arrow] (rules) -- (output);
+\end{tikzpicture}
+}%
+\caption{Neural-symbolic SATB harmonization pipeline. The system accepts a soprano line, bass line, partially masked SATB score, or optional Roman-numeral plan; converts the score into symbolic tokens; predicts missing voices with a Transformer; applies conservative rule-guided decoding; and exports SATB MusicXML together with an explainable rule report. Roman-numeral and chord labels are automatically estimated when available, and uncertain labels are preserved as \texttt{UNKNOWN} rather than treated as ground truth.}
+\label{fig:project1-method}
+\end{figure}

@@ -1,0 +1,66 @@
+\section{Results}
+
+\subsection{Logged Full-Experiment Artifacts}
+
+The consolidated metric file \texttt{results/project1\_metrics.csv} contains completed non-smoke rows for the LSTM baseline, the vanilla/no-constraints Transformer, the proposed rule-guided Transformer, the masked-infilling task, and the soprano-to-SATB task. It also contains completed ablation rows for no harmonic conditioning, no iterative refinement, and no rule-guided decoding. All non-smoke evaluations reported MusicXML export success rate 1.0 across 37 test generations.
+
+\input{tables/project1_main_results}
+
+Figure~\ref{fig:project1-main-metrics} summarizes the logged full-run metrics used for the main comparison and ablation analysis.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/project1_metrics_summary.pdf}
+\caption{Primary quantitative comparison generated from logged non-smoke rows. Panel a shows the prediction trade-off for the LSTM baseline, vanilla/no-constraints Transformer, and proposed neural-symbolic Transformer. Panel b reports the cross-entropy penalty of ablations relative to the full proposed model. Panels c and d show rule-diagnostic changes relative to the vanilla Transformer, with negative values indicating fewer automatic rule flags. Values are from one deterministic split of 37 held-out music21 Bach chorales and one logged seed. No confidence intervals, significance tests, or expert ratings are included in this figure.}
+\label{fig:project1-main-metrics}
+\end{figure}
+
+\subsection{Pitch Accuracy and Likelihood}
+
+For the soprano-to-SATB setting, the proposed rule-guided Transformer improved pitch accuracy relative to the vanilla/no-constraints Transformer from 0.7682 to 0.8242 and reduced cross entropy from 0.8708 to 0.5864. The LSTM baseline reached pitch accuracy 0.7765 and cross entropy 0.7853. A separately logged soprano-to-SATB task run closely matched the proposed configuration, with pitch accuracy 0.8238 and cross entropy 0.5863. The masked-infilling task achieved the highest logged pitch accuracy, 0.8290, but this row reflects a different conditioning problem and is not a direct replacement for soprano-only harmonization.
+
+\subsection{Rule-Violation Profile}
+
+The proposed rule-guided Transformer reduced several targeted common-practice diagnostics relative to the vanilla/no-constraints Transformer. Parallel fifths decreased from 2.8202 to 1.9636 per 100 score positions. Voice crossing rate decreased from 0.0051 to 0.0014, spacing violation rate decreased from 0.0013 to 0.0003, and seventh-resolution violation rate decreased from 0.0348 to 0.0216. These logged changes support the use of explicit score-level checks for selected rule classes.
+
+The aggregate rule profile was more mixed. Total rule violations per 100 score positions increased from 27.4381 for the vanilla/no-constraints Transformer to 33.4212 for the proposed model, and parallel octaves increased from 2.4381 to 3.6769 per 100 score positions. The detailed rule table indicates that leading-tone-resolution flags dominate the proposed model's total count. The present decoder should therefore be read as a targeted repair and explanation layer rather than a global constraint optimizer.
+
+\input{tables/project1_rule_violations}
+
+The rule-level pattern is visualized in Figure~\ref{fig:project1-rule-bars}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/project1_rule_violations_bar.pdf}
+\caption{Rule-specific diagnostics from logged non-smoke evaluations. Panel a reports automatic rule counts per 100 quantized SATB score positions for the vanilla Transformer, proposed model, and two ablations. Panel b gives the directional change of the proposed model relative to the vanilla Transformer. Green bars denote fewer flags and red bars denote more flags. These automatic diagnostics are useful for inspecting common-practice voice-leading behavior, but they do not replace human assessment of harmonic style, cadence quality, or pedagogical usefulness.}
+\label{fig:project1-rule-bars}
+\end{figure}
+
+\subsection{Ablation Evidence}
+
+The ablations separate the effects of harmonic conditioning, iterative refinement, and symbolic decoding. Removing harmonic conditioning reduced pitch accuracy to 0.7738 and increased cross entropy to 0.8275, close to the vanilla/no-constraints baseline. This result indicates that automatic harmonic context contributes substantially to the prediction gain. However, the no-harmony ablation had fewer total rule violations than the full proposed model, so improved likelihood did not automatically imply fewer aggregate rule flags.
+
+Removing iterative refinement left pitch accuracy and cross entropy nearly unchanged relative to the full proposed model, with 0.8241 accuracy and 0.5863 cross entropy, but it changed the rule profile and increased parallel octaves to 4.3490 per 100 score positions. Removing rule-guided decoding also left accuracy nearly unchanged, 0.8243, but increased total violations to 34.3437 per 100 score positions, voice crossing rate to 0.0033, and spacing violation rate to 0.0008. These rows suggest that symbolic decoding mainly affects selected structural diagnostics rather than token likelihood.
+
+\input{tables/project1_ablation_results}
+
+\subsection{Harmonic Labels, Cadence Evidence, and Training Curves}
+
+The automatic harmonic-label pipeline produced high source coverage for the evaluated Bach test inputs, with non-smoke source Roman-numeral or chord-label coverage 0.9953. Generated-score harmonic coverage was also high, ranging from 0.9942 to 0.9958 in the logged primary rows. Cadence evidence remained uncertain: cadence-unknown rate was 0.9189 for the proposed, masked-infilling, and soprano-to-SATB task entries, and 0.9730 for the LSTM and vanilla/no-constraints entries. Cadence unknowns are therefore part of the method's uncertainty reporting, not a substitute for expert analysis.
+
+\input{tables/project1_harmony_label_coverage}
+
+Figure~\ref{fig:project1-training-curves} reports the selected training histories that have complete logged validation curves.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/project1_training_curves.pdf}
+\caption{Validation curves generated from selected \texttt{runs/*/metrics.csv} files. Curves are plotted only for comparable training histories with complete logged validation metrics. The figure reports predictive training metrics, not human musical quality, and does not interpolate missing epochs or unlogged experiments.}
+\label{fig:project1-training-curves}
+\end{figure}
+
+\subsection{Expert Evaluation Status}
+
+No completed expert ratings were found in the inspected expert-evaluation files. The current package supplies anonymized score materials and blank forms, so expert evaluation is pending. This study remains necessary because token accuracy and rule counts do not fully capture cadence quality, singability, stylistic consistency, or usefulness in composition pedagogy.
+
+\input{tables/project1_expert_eval_results}

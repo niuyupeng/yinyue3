@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "explainable-neural-symbolic-chorale"
+version = "0.1.0"
+description = "Explainable neural-symbolic SATB choral harmonization with common-practice constraints."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Research Codebase" }]
+dependencies = [
+  "numpy>=1.23",
+  "PyYAML>=6.0",
+  "music21>=9.1",
+  "torch>=2.1",
+  "tqdm>=4.66",
+  "openpyxl>=3.1"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,469 @@
+{
+  "title": "project1_sample0 generated rule report",
+  "total_penalty": 37.5,
+  "total_violations": 50,
+  "counts": {
+    "leading_tone_resolution": 50
+  },
+  "violations_per_100_timesteps": 19.53125,
+  "explanations": [
+    "m. 1 beat 4: approximate leading tone in soprano does not resolve to tonic",
+    "m. 2 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 2 beat 4: approximate leading tone in soprano does not resolve to tonic",
+    "m. 2 beat 4.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 2 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 2 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 3 beat 2: approximate leading tone in soprano does not resolve to tonic",
+    "m. 3 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 3 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 4 beat 1.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 4 beat 1.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 5 beat 3: approximate leading tone in soprano does not resolve to tonic",
+    "m. 5 beat 3.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 5 beat 3.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 5 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 5 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 6 beat 2: approximate leading tone in soprano does not resolve to tonic",
+    "m. 6 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 6 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 6 beat 2.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 7 beat 2: approximate leading tone in soprano does not resolve to tonic",
+    "m. 7 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 7 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 8 beat 2: approximate leading tone in soprano does not resolve to tonic",
+    "m. 8 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 8 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 8 beat 2.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 9 beat 1: approximate leading tone in soprano does not resolve to tonic",
+    "m. 10 beat 1: approximate leading tone in soprano does not resolve to tonic",
+    "m. 10 beat 1.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 10 beat 1.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 10 beat 4: approximate leading tone in soprano does not resolve to tonic",
+    "m. 10 beat 4.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 10 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 10 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 12 beat 3: approximate leading tone in soprano does not resolve to tonic",
+    "m. 12 beat 3.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 12 beat 3.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 12 beat 3.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 13 beat 2: approximate leading tone in soprano does not resolve to tonic",
+    "m. 13 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 13 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 13 beat 2.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 15 beat 4: approximate leading tone in soprano does not resolve to tonic",
+    "m. 15 beat 4.25: approximate leading tone in soprano does not resolve to tonic",
+    "m. 15 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 15 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+    "m. 16 beat 1: approximate leading tone in soprano does not resolve to tonic",
+    "m. 16 beat 3.5: approximate leading tone in soprano does not resolve to tonic",
+    "m. 16 beat 3.75: approximate leading tone in soprano does not resolve to tonic"
+  ],
+  "violations": [
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 12,
+      "measure": 1,
+      "beat": 4.0,
+      "message": "m. 1 beat 4: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 22,
+      "measure": 2,
+      "beat": 2.5,
+      "message": "m. 2 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 28,
+      "measure": 2,
+      "beat": 4.0,
+      "message": "m. 2 beat 4: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 29,
+      "measure": 2,
+      "beat": 4.25,
+      "message": "m. 2 beat 4.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 30,
+      "measure": 2,
+      "beat": 4.5,
+      "message": "m. 2 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 31,
+      "measure": 2,
+      "beat": 4.75,
+      "message": "m. 2 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 36,
+      "measure": 3,
+      "beat": 2.0,
+      "message": "m. 3 beat 2: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 37,
+      "measure": 3,
+      "beat": 2.25,
+      "message": "m. 3 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 38,
+      "measure": 3,
+      "beat": 2.5,
+      "message": "m. 3 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 50,
+      "measure": 4,
+      "beat": 1.5,
+      "message": "m. 4 beat 1.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 51,
+      "measure": 4,
+      "beat": 1.75,
+      "message": "m. 4 beat 1.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 72,
+      "measure": 5,
+      "beat": 3.0,
+      "message": "m. 5 beat 3: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 73,
+      "measure": 5,
+      "beat": 3.25,
+      "message": "m. 5 beat 3.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 74,
+      "measure": 5,
+      "beat": 3.5,
+      "message": "m. 5 beat 3.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 78,
+      "measure": 5,
+      "beat": 4.5,
+      "message": "m. 5 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 79,
+      "measure": 5,
+      "beat": 4.75,
+      "message": "m. 5 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 84,
+      "measure": 6,
+      "beat": 2.0,
+      "message": "m. 6 beat 2: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 85,
+      "measure": 6,
+      "beat": 2.25,
+      "message": "m. 6 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 86,
+      "measure": 6,
+      "beat": 2.5,
+      "message": "m. 6 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 87,
+      "measure": 6,
+      "beat": 2.75,
+      "message": "m. 6 beat 2.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 100,
+      "measure": 7,
+      "beat": 2.0,
+      "message": "m. 7 beat 2: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 101,
+      "measure": 7,
+      "beat": 2.25,
+      "message": "m. 7 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 102,
+      "measure": 7,
+      "beat": 2.5,
+      "message": "m. 7 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 116,
+      "measure": 8,
+      "beat": 2.0,
+      "message": "m. 8 beat 2: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 117,
+      "measure": 8,
+      "beat": 2.25,
+      "message": "m. 8 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 118,
+      "measure": 8,
+      "beat": 2.5,
+      "message": "m. 8 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 119,
+      "measure": 8,
+      "beat": 2.75,
+      "message": "m. 8 beat 2.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 128,
+      "measure": 9,
+      "beat": 1.0,
+      "message": "m. 9 beat 1: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 144,
+      "measure": 10,
+      "beat": 1.0,
+      "message": "m. 10 beat 1: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 145,
+      "measure": 10,
+      "beat": 1.25,
+      "message": "m. 10 beat 1.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 146,
+      "measure": 10,
+      "beat": 1.5,
+      "message": "m. 10 beat 1.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 156,
+      "measure": 10,
+      "beat": 4.0,
+      "message": "m. 10 beat 4: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 157,
+      "measure": 10,
+      "beat": 4.25,
+      "message": "m. 10 beat 4.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 158,
+      "measure": 10,
+      "beat": 4.5,
+      "message": "m. 10 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 159,
+      "measure": 10,
+      "beat": 4.75,
+      "message": "m. 10 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 184,
+      "measure": 12,
+      "beat": 3.0,
+      "message": "m. 12 beat 3: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 185,
+      "measure": 12,
+      "beat": 3.25,
+      "message": "m. 12 beat 3.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 186,
+      "measure": 12,
+      "beat": 3.5,
+      "message": "m. 12 beat 3.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 187,
+      "measure": 12,
+      "beat": 3.75,
+      "message": "m. 12 beat 3.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 196,
+      "measure": 13,
+      "beat": 2.0,
+      "message": "m. 13 beat 2: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 197,
+      "measure": 13,
+      "beat": 2.25,
+      "message": "m. 13 beat 2.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 198,
+      "measure": 13,
+      "beat": 2.5,
+      "message": "m. 13 beat 2.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 199,
+      "measure": 13,
+      "beat": 2.75,
+      "message": "m. 13 beat 2.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 236,
+      "measure": 15,
+      "beat": 4.0,
+      "message": "m. 15 beat 4: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 237,
+      "measure": 15,
+      "beat": 4.25,
+      "message": "m. 15 beat 4.25: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 238,
+      "measure": 15,
+      "beat": 4.5,
+      "message": "m. 15 beat 4.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 239,
+      "measure": 15,
+      "beat": 4.75,
+      "message": "m. 15 beat 4.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 240,
+      "measure": 16,
+      "beat": 1.0,
+      "message": "m. 16 beat 1: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 250,
+      "measure": 16,
+      "beat": 3.5,
+      "message": "m. 16 beat 3.5: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    },
+    {
+      "rule": "leading_tone_resolution",
+      "timestep": 251,
+      "measure": 16,
+      "beat": 3.75,
+      "message": "m. 16 beat 3.75: approximate leading tone in soprano does not resolve to tonic",
+      "penalty": 0.75
+    }
+  ],
+  "limitations": [
+    "Seventh-resolution checking requires chord labels; unavailable labels are reported in harmony_rules.",
+    "Cadence correctness is a TODO when Roman numeral labels are unavailable.",
+    "Seventh-resolution checking is not run because chord labels are unavailable.",
+    "Cadence correctness requires Roman numeral cadence labels and is marked TODO for unlabeled scores."
+  ]
+}

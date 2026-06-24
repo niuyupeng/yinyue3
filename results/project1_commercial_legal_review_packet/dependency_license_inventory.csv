@@ -1,0 +1,8 @@
+﻿requirement,distribution_name,version,license,license_classifiers,summary,home_page
+numpy,numpy,2.4.4,unknown,,Fundamental package for array computing in Python,"homepage, https://numpy.org"
+PyYAML,PyYAML,6.0.3,MIT,License :: OSI Approved :: MIT License,YAML parser and emitter for Python,https://pyyaml.org/
+music21,music21,10.3.0,BSD License,License :: OSI Approved :: BSD License,A Toolkit for Computer-Aided Musical Analysis and Computational Musicology.,"Download, https://github.com/cuthbertLab/music21/releases/"
+torch,torch,2.11.0+cu128,BSD-3-Clause,,Tensors and Dynamic neural networks in Python with strong GPU acceleration,"Homepage, https://pytorch.org"
+pytest,pytest,9.0.3,unknown,,pytest: simple powerful testing with Python,"Changelog, https://docs.pytest.org/en/stable/changelog.html"
+tqdm,tqdm,4.68.2,MPL-2.0 AND MIT,,"Fast, Extensible Progress Meter","homepage, https://tqdm.github.io"
+openpyxl,openpyxl,3.1.5,MIT,License :: OSI Approved :: MIT License,A Python library to read/write Excel 2010 xlsx/xlsm files,https://openpyxl.readthedocs.io

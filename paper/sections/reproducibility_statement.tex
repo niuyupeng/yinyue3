@@ -1,0 +1,30 @@
+\section{Reproducibility Statement}
+
+All experiments are configured through YAML files in \path{configs/}. The full local suite uses the LSTM, no-constraints Transformer, rule-guided Transformer, masked-infilling, and soprano-to-SATB configurations. The full-training seed is 2026 and the smoke-validation seed is 1234. The dataset source is the Bach chorale collection bundled with music21. The processed full dataset contains 371 chorales with deterministic train, validation, and test counts of 297, 37, and 37.
+
+The completed primary local run used NVIDIA GeForce RTX 4060 Ti with 16GB VRAM, Intel i5-12400F CPU, 16GB RAM, and Windows 11 Professional 64-bit. The CUDA sanity check used the project virtual environment, reported torch \texttt{2.11.0+cu128}, confirmed CUDA availability, and detected 16.00 GiB CUDA device memory.
+
+The exact Windows PowerShell commands for the full local run are:
+\begin{verbatim}
+cd C:\Users\nyp\Documents\yinyue3
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\scripts\setup_windows_cuda.ps1
+.\scripts\check_cuda.ps1 -RequireCuda
+.\scripts\run_project1_full_local.ps1
+.\scripts\make_project1_tables.ps1
+\end{verbatim}
+The primary continuation run used:
+\begin{verbatim}
+.\scripts\run_project1_resume_primary_after_lstm.ps1
+.\.venv\Scripts\python.exe -m chorale.make_tables
+\end{verbatim}
+The focused ablations were run with:
+\begin{verbatim}
+.\scripts\run_project1_ablations.ps1
+.\.venv\Scripts\python.exe -m chorale.make_tables
+\end{verbatim}
+The CPU software-validation command is:
+\begin{verbatim}
+.\scripts\smoke_project1.ps1
+\end{verbatim}
+Training logs and checkpoints are written to \texttt{runs/}; consolidated evaluation files are written to \texttt{results/}; MusicXML examples are written to \texttt{generated\_scores/}; blind expert-evaluation materials are stored under \texttt{expert\_eval/project1/}.

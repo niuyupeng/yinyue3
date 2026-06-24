@@ -1,0 +1,40 @@
+seed: 1234
+run:
+  name: chorale_smoke
+  output_dir: runs/chorale_smoke
+data:
+  processed_path: data/processed/chorale_smoke.npz
+  external_xml_dir:
+  max_chorales: 20
+  harmonic_labels: true
+  grid_quarter_length: 0.25
+  max_seq_len: 128
+  train_fraction: 0.8
+  val_fraction: 0.1
+  test_fraction: 0.1
+  min_midi: 36
+  max_midi: 84
+task:
+  name: soprano_to_satb
+  mask_prob: 0.45
+model:
+  type: transformer
+  hidden_size: 96
+  layers: 2
+  heads: 4
+  dropout: 0.1
+  max_seq_len: 128
+train:
+  epochs: 1
+  batch_size: 4
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  mixed_precision: true
+  early_stopping_patience: 3
+  num_workers: 0
+  fast_dev_batches: 3
+eval:
+  batch_size: 4
+  max_batches: 3
+  export_samples: 2

@@ -1,0 +1,12 @@
+{
+  "schema": "project1_commercial_claims_audit_v1",
+  "generated_at_utc": "2026-06-24T05:21:22+00:00",
+  "all_pass": true,
+  "status": "pass",
+  "scanned_file_count": 54,
+  "finding_count": 0,
+  "violation_count": 0,
+  "warning_count": 0,
+  "findings": [],
+  "method_note": "This audit checks public-facing text for unsupported commercial, audio-generation, and human-vocal claims. Negated or warning contexts such as 'do not claim' and 'not audio generation' are treated as allowed boundary language."
+}

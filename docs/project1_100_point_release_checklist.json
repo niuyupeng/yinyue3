@@ -1,0 +1,24 @@
+{
+  "schema": "project1_release_checklist_v1",
+  "generated_at_utc": "2026-06-24T05:21:25+00:00",
+  "status": {
+    "engineering_delivery_score": 100,
+    "engineering_release_candidate_ready": true,
+    "customer_review_ready": true,
+    "commercial_readiness_score": 75.0,
+    "release_status": "blocked",
+    "commercial_release_ready": false,
+    "engineering_acceptance": "pass",
+    "commercial_release": "pending_external_evidence"
+  },
+  "zip_file": "expert_eval\\project1\\deliverables\\project1_pro_playback_mp3_100_FINAL_20260624_131322.zip",
+  "zip_sha256": "260d18cda1a0df4cd14bc2266ea8a07b9064c3d1bed1458738ce1a36765cf422",
+  "commercial_readiness_score": 75.0,
+  "release_status": "blocked",
+  "blocking_items": [
+    "commercial_readiness_100",
+    "commercial_acceptance_ready",
+    "returned_expert_evaluation",
+    "commercial_legal_signoff"
+  ]
+}

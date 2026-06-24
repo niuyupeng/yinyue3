@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{Focused architecture and decoding ablations from logged non-smoke evaluations.}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllllllll}
+\toprule
+Experiment & Rule-guided & Pitch acc. & CE & Viol./100 pos. & P5/100 pos. & P8/100 pos. & 7th viol. & Crossing & Range & Spacing \\
+\midrule
+Vanilla / no-constraints Transformer & no & 0.7682 & 0.8708 & 27.4381 & 2.8202 & 2.4381 & 0.0348 & 0.0051 & 0.0000 & 0.0013 \\
+Proposed full model & yes & 0.8241 & 0.5938 & 17.7912 & 0.0132 & 0.0659 & 0.1151 & 0.0000 & 0.0000 & 0.0000 \\
+No harmonic conditioning & yes & 0.7716 & 0.8469 & 57.7491 & 5.4164 & 2.8861 & 0.2869 & 0.0000 & 0.0000 & 0.0000 \\
+No iterative refinement & yes & 0.8249 & 0.5938 & 61.7290 & 2.7543 & 8.3158 & 0.1338 & 0.0000 & 0.0000 & 0.0000 \\
+No rule-guided decoding & no & 0.8238 & 0.5936 & 32.6173 & 1.6473 & 3.2156 & 0.0204 & 0.0025 & 0.0000 & 0.0009 \\
+No voice-relation attention & yes & 0.8246 & 0.5863 & 65.4718 & 3.4924 & 11.3337 & 0.1103 & 0.0000 & 0.0000 & 0.0000 \\
+\bottomrule
+\end{tabular}
+}%
+\end{table}

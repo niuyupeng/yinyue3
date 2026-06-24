@@ -1,0 +1,34 @@
+\begin{table}[t]
+\centering
+\caption{Compact rule-violation summary from non-smoke logged evaluations. Full per-rule counts remain in results/project1\_rule\_violations.csv.}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllllll}
+\toprule
+Model & Task & Rule-guided & P5/100 & P8/100 & Cross/100 & Spacing/100 & 7th/100 & LT/100 \\
+\midrule
+ablation\_no\_harmony\_conditioning & soprano\_to\_satb & yes & 3.6110 & 2.8071 & 0.0527 & 0.0000 & 2.8598 & 15.2609 \\
+ablation\_no\_harmony\_conditioning\_enhanced & soprano\_to\_satb & yes & 5.4164 & 2.8861 & 0.0000 & 0.0000 & 28.6900 & 13.8508 \\
+ablation\_no\_iterative\_refinement & soprano\_to\_satb & yes & 1.9241 & 4.3490 & 0.1845 & 0.1054 & 2.3985 & 21.3495 \\
+ablation\_no\_iterative\_refinement\_enhanced & soprano\_to\_satb & yes & 2.7543 & 8.3158 & 0.0000 & 0.0000 & 13.3764 & 24.9209 \\
+ablation\_no\_rule\_guided\_decoding & soprano\_to\_satb & no & 1.8846 & 3.6505 & 1.0016 & 0.2372 & 2.1481 & 22.1929 \\
+ablation\_no\_rule\_guided\_decoding\_enhanced & soprano\_to\_satb & no & 1.6473 & 3.2156 & 0.7380 & 0.2636 & 2.0427 & 21.8766 \\
+ablation\_no\_voice\_relation\_attention\_enhanced & soprano\_to\_satb & yes & 3.4924 & 11.3337 & 0.0000 & 0.0000 & 11.0306 & 23.5108 \\
+lstm\_baseline & soprano\_to\_satb & no & 3.5978 & 2.7543 & 0.0527 & 0.0000 & 2.8466 & 10.7011 \\
+proposed\_neural\_symbolic\_masked\_infilling & masked\_infill & yes & 1.0807 & 1.7396 & 0.5799 & 0.0659 & 3.6110 & 19.7417 \\
+proposed\_neural\_symbolic\_masked\_infilling\_enhanced & masked\_infill & yes & 2.4776 & 5.2847 & 0.3954 & 0.7116 & 12.5198 & 23.4449 \\
+proposed\_neural\_symbolic\_rule\_guided & soprano\_to\_satb & yes & 1.9636 & 3.6769 & 0.4217 & 0.0791 & 2.1613 & 22.0216 \\
+proposed\_neural\_symbolic\_rule\_guided\_enhanced & soprano\_to\_satb & yes & 2.5830 & 8.5398 & 0.0000 & 0.0000 & 13.2051 & 23.2868 \\
+proposed\_neural\_symbolic\_rule\_guided\_rerankfix\_20260617\_125404 & soprano\_to\_satb & yes & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 12.4143 & 13.5477 \\
+proposed\_neural\_symbolic\_rule\_guided\_rerankfix\_tuned\_20260617\_125404 & soprano\_to\_satb & yes & 0.0132 & 0.0659 & 0.0000 & 0.0000 & 11.5050 & 5.4428 \\
+proposed\_neural\_symbolic\_soprano\_to\_satb & soprano\_to\_satb & yes & 1.9900 & 3.6769 & 0.4217 & 0.0791 & 2.1613 & 22.0348 \\
+proposed\_neural\_symbolic\_soprano\_to\_satb\_enhanced & soprano\_to\_satb & yes & 2.7280 & 8.6321 & 0.0000 & 0.0000 & 12.9810 & 23.1154 \\
+rerank\_sweep\_balanced\_t1\_s1 & soprano\_to\_satb & yes & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 11.8213 & 13.4159 \\
+rerank\_sweep\_old\_vertical\_only & soprano\_to\_satb & yes & 2.6357 & 8.5398 & 0.0000 & 0.0000 & 13.0337 & 23.0759 \\
+rerank\_sweep\_temporal2\_seventh2 & soprano\_to\_satb & yes & 0.0000 & 0.0264 & 0.0000 & 0.0000 & 11.5973 & 8.6979 \\
+rerank\_sweep\_temporal3\_seventh2 & soprano\_to\_satb & yes & 0.0000 & 0.0527 & 0.0000 & 0.0000 & 11.7422 & 6.4048 \\
+rerank\_sweep\_temporal4\_seventh3 & soprano\_to\_satb & yes & 0.0132 & 0.0659 & 0.0000 & 0.0000 & 11.5050 & 5.4428 \\
+transformer\_no\_constraints & soprano\_to\_satb & no & 2.8202 & 2.4381 & 1.5287 & 0.3954 & 3.4792 & 13.8772 \\
+\bottomrule
+\end{tabular}
+}%
+\end{table}

@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{Main full-experiment metrics. Cells are filled only from logged non-smoke result rows.}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllllllllllllllll}
+\toprule
+Experiment & Task & Checkpoint & Pitch acc. & S acc. & A acc. & T acc. & B acc. & CE & NLL & Viol./100 pos. & P5/100 pos. & P8/100 pos. & Crossing & Spacing & 7th viol. & Cad. unknown & XML success \\
+\midrule
+LSTM baseline & soprano\_to\_satb & runs\textbackslash{}chorale\_lstm\_full\_20260615\_085410\textbackslash{}best.pt & 0.7765 & 0.0000 & 0.7870 & 0.7717 & 0.7707 & 0.7853 & 0.7853 & 22.1534 & 3.5978 & 2.7543 & 0.0002 & 0.0000 & 0.0285 & 0.9730 & 1.0000 \\
+Vanilla Transformer & soprano\_to\_satb & runs\textbackslash{}chorale\_transformer\_no\_constraints\textbackslash{}best.pt & 0.7682 & 0.0000 & 0.7802 & 0.7628 & 0.7617 & 0.8708 & 0.8708 & 27.4381 & 2.8202 & 2.4381 & 0.0051 & 0.0013 & 0.0348 & 0.9730 & 1.0000 \\
+Transformer without constraints & soprano\_to\_satb & runs\textbackslash{}chorale\_transformer\_no\_constraints\textbackslash{}best.pt & 0.7682 & 0.0000 & 0.7802 & 0.7628 & 0.7617 & 0.8708 & 0.8708 & 27.4381 & 2.8202 & 2.4381 & 0.0051 & 0.0013 & 0.0348 & 0.9730 & 1.0000 \\
+Proposed rule-guided Transformer & soprano\_to\_satb & runs\textbackslash{}chorale\_rule\_guided\_decoding\_rerankfix\_20260617\_125404\textbackslash{}best.pt & 0.8241 & 0.0000 & 0.8324 & 0.8137 & 0.8263 & 0.5938 & 0.5938 & 17.7912 & 0.0132 & 0.0659 & 0.0000 & 0.0000 & 0.1151 & 0.9730 & 1.0000 \\
+Masked infilling task & masked\_infill & runs\textbackslash{}chorale\_masked\_infilling\_enhanced\_20260616\_205831\textbackslash{}best.pt & 0.8371 & 0.8695 & 0.8418 & 0.8168 & 0.8197 & 0.5784 & 0.5784 & 61.0174 & 2.4776 & 5.2847 & 0.0013 & 0.0024 & 0.1252 & 0.9730 & 1.0000 \\
+Soprano-to-SATB task & soprano\_to\_satb & runs\textbackslash{}chorale\_soprano\_to\_satb\_enhanced\_20260616\_205831\textbackslash{}best.pt & 0.8242 & 0.0000 & 0.8316 & 0.8142 & 0.8268 & 0.5939 & 0.5939 & 59.4360 & 2.7280 & 8.6321 & 0.0000 & 0.0000 & 0.1298 & 0.9730 & 1.0000 \\
+\bottomrule
+\end{tabular}
+}%
+\end{table}

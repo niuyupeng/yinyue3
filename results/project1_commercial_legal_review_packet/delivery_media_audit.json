@@ -1,0 +1,16 @@
+{
+  "schema": "project1_delivery_media_audit_v1",
+  "generated_at_utc": "2026-06-24T05:20:43+00:00",
+  "package_dir": "expert_eval\\project1\\deliverables\\project1_pro_playback_mp3_100_FINAL_20260624_131322",
+  "ffprobe": "C:\\Users\\nyp\\Documents\\yinyue3\\external_tools\\ffmpeg\\bin\\ffprobe.exe",
+  "media_delivery_score": 100,
+  "all_pass": true,
+  "entry_count": 240,
+  "pass_count": 240,
+  "fail_count": 0,
+  "ffprobe_missing": false,
+  "mp3_parse_ok_count": 240,
+  "midi_parse_ok_count": 240,
+  "max_abs_duration_delta_sec": 0.001,
+  "failure_examples": []
+}

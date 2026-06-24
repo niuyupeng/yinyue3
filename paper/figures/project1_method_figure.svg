@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="410.58pt" height="114.192pt" viewBox="0 0 410.58 114.192" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-06-19T23:37:06.784878</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 114.192
+L 410.58 114.192
+L 410.58 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 21.46248 74.858976
+L 80.09712 74.858976
+Q 87.22836 74.858976 87.22836 73.06272
+L 87.22836 39.13344
+Q 87.22836 37.337184 80.09712 37.337184
+L 21.46248 37.337184
+Q 14.33124 37.337184 14.33124 39.13344
+L 14.33124 73.06272
+Q 14.33124 74.858976 21.46248 74.858976
+z
+" clip-path="url(#p843ade3d3d)" style="fill: #f7f7f7; stroke: #272727; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 96.73668 74.858976
+L 155.37132 74.858976
+Q 162.50256 74.858976 162.50256 73.06272
+L 162.50256 39.13344
+Q 162.50256 37.337184 155.37132 37.337184
+L 96.73668 37.337184
+Q 89.60544 37.337184 89.60544 39.13344
+L 89.60544 73.06272
+Q 89.60544 74.858976 96.73668 74.858976
+z
+" clip-path="url(#p843ade3d3d)" style="fill: #e8eef8; stroke: #272727; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 175.97268 74.858976
+L 234.60732 74.858976
+Q 241.73856 74.858976 241.73856 73.06272
+L 241.73856 39.13344
+Q 241.73856 37.337184 234.60732 37.337184
+L 175.97268 37.337184
+Q 168.84144 37.337184 168.84144 39.13344
+L 168.84144 73.06272
+Q 168.84144 74.858976 175.97268 74.858976
+z
+" clip-path="url(#p843ade3d3d)" style="fill: #dce7f3; stroke: #272727; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 255.20868 74.858976
+L 313.84332 74.858976
+Q 320.97456 74.858976 320.97456 73.06272
+L 320.97456 39.13344
+Q 320.97456 37.337184 313.84332 37.337184
+L 255.20868 37.337184
+Q 248.07744 37.337184 248.07744 39.13344
+L 248.07744 73.06272
+Q 248.07744 74.858976 255.20868 74.858976
+z
+" clip-path="url(#p843ade3d3d)" style="fill: #eaf4ea; stroke: #272727; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 330.48288 74.858976
+L 389.11752 74.858976
+Q 396.24876 74.858976 396.24876 73.06272
+L 396.24876 39.13344
+Q 396.24876 37.337184 389.11752 37.337184
+L 330.48288 37.337184
+Q 323.35164 37.337184 323.35164 39.13344
+L 323.35164 73.06272
+Q 323.35164 74.858976 330.48288 74.858976
+z
+" clip-path="url(#p843ade3d3d)" style="fill: #f7f7f7; stroke: #272727; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 85.663759 56.09808
+Q 88.418513 56.09808 90.27884 56.09808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 86.67884 54.29808
+L 90.27884 56.09808
+L 86.67884 57.89808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 160.9397 56.09808
+Q 165.672505 56.09808 169.510884 56.09808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 165.910884 54.29808
+L 169.510884 56.09808
+L 165.910884 57.89808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 240.1757 56.09808
+Q 244.908505 56.09808 248.746884 56.09808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 245.146884 54.29808
+L 248.746884 56.09808
+L 245.146884 57.89808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 319.409959 56.09808
+Q 322.164713 56.09808 324.02504 56.09808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+    <path d="M 320.42504 54.29808
+L 324.02504 56.09808
+L 320.42504 57.89808
+" clip-path="url(#p843ade3d3d)" style="fill: none; stroke: #272727; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(28.210816 54.100277)">Soprano, bass</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(27.824722 61.71893)">or Roman plan</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(116.911344 54.100277)">Score</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(111.853297 61.71893)">tokenizer</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(180.201563 54.100209)">Neural-symbolic</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(186.362656 61.718998)">Transformer</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(265.653344 54.100141)">Rule-guided</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(270.320375 61.71893)">decoding</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(333.610356 54.100277)">SATB MusicXML</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif" transform="translate(343.846763 61.71893)">and report</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p843ade3d3d">
+   <rect x="7.2" y="7.2" width="396.18" height="99.792"/>
+  </clipPath>
+ </defs>
+</svg>

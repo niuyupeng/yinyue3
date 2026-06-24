@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{Automatic harmonic-label coverage for non-smoke evaluations.}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllll}
+\toprule
+Experiment & Task & RN coverage & Chord coverage & Generated RN coverage & Generated chord coverage & Cadence unknown \\
+\midrule
+LSTM baseline & soprano\_to\_satb & 0.9953 & 0.9953 & 0.9947 & 0.9947 & 0.9730 \\
+Vanilla Transformer & soprano\_to\_satb & 0.9953 & 0.9953 & 0.9942 & 0.9942 & 0.9730 \\
+Transformer without constraints & soprano\_to\_satb & 0.9953 & 0.9953 & 0.9942 & 0.9942 & 0.9730 \\
+Proposed rule-guided Transformer & soprano\_to\_satb & 0.9953 & 0.9953 & 0.9864 & 0.9864 & 0.9730 \\
+Masked infilling task & masked\_infill & 0.9953 & 0.9953 & 0.9864 & 0.9864 & 0.9730 \\
+Soprano-to-SATB task & soprano\_to\_satb & 0.9953 & 0.9953 & 0.9870 & 0.9870 & 0.9730 \\
+\bottomrule
+\end{tabular}
+}%
+\end{table}

@@ -1,0 +1,12 @@
+project1_sample4 generated rule report
+Total penalty: 0.0
+Total violations: 0
+
+Violations:
+None detected.
+
+Limitations:
+Seventh-resolution checking requires chord labels; unavailable labels are reported in harmony_rules.
+Cadence correctness is a TODO when Roman numeral labels are unavailable.
+Seventh-resolution checking is not run because chord labels are unavailable.
+Cadence correctness requires Roman numeral cadence labels and is marked TODO for unlabeled scores.

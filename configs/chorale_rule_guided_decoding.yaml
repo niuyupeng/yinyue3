@@ -1,0 +1,60 @@
+seed: 2026
+run:
+  name: chorale_rule_guided_decoding
+  output_dir: runs/chorale_rule_guided_decoding
+experiment:
+  label: proposed_neural_symbolic_rule_guided_enhanced
+data:
+  processed_path: data/processed/chorale_main.npz
+  external_xml_dir:
+  max_chorales:
+  harmonic_labels: true
+  grid_quarter_length: 0.25
+  max_seq_len: 256
+  train_fraction: 0.8
+  val_fraction: 0.1
+  test_fraction: 0.1
+  min_midi: 36
+  max_midi: 84
+task:
+  name: soprano_to_satb
+  mask_prob: 0.45
+model:
+  type: neural_symbolic_transformer
+  hidden_size: 384
+  layers: 6
+  heads: 6
+  dropout: 0.1
+  max_seq_len: 256
+  max_relative_distance: 64
+  use_harmony_conditioning: true
+  use_voice_relation_attention: true
+  voice_relation_heads: 2
+train:
+  epochs: 50
+  batch_size: 8
+  learning_rate: 0.0003
+  weight_decay: 0.01
+  gradient_clip: 1.0
+  gradient_accumulation: 1
+  mixed_precision: true
+  early_stopping_patience: 10
+  num_workers: 0
+  fast_dev_batches:
+eval:
+  batch_size: 8
+  max_batches:
+  export_samples: 10
+constraints:
+  use_rule_guided_decoding: true
+  use_constraint_reranking: true
+  rerank_top_k: 4
+  rerank_rule_weight: 0.6
+  rerank_harmony_weight: 0.0
+  rerank_temporal_weight: 4.0
+  rerank_seventh_weight: 3.0
+decoding:
+  iterative_refinement: true
+  refinement_steps: 8
+  refinement_strategy: confidence
+  remask_fraction: 0.35

@@ -1,0 +1,7 @@
+numpy>=1.23
+PyYAML>=6.0
+music21>=9.1
+torch>=2.1
+pytest>=7.4
+tqdm>=4.66
+openpyxl>=3.1

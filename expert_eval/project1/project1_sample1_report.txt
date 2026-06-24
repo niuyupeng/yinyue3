@@ -1,0 +1,29 @@
+project1_sample1 generated rule report
+Total penalty: 13.5
+Total violations: 18
+
+Violations:
+m. 1 beat 4: approximate leading tone in soprano does not resolve to tonic
+m. 1 beat 4.25: approximate leading tone in soprano does not resolve to tonic
+m. 1 beat 4.5: approximate leading tone in soprano does not resolve to tonic
+m. 1 beat 4.75: approximate leading tone in soprano does not resolve to tonic
+m. 6 beat 2.5: approximate leading tone in soprano does not resolve to tonic
+m. 6 beat 2.75: approximate leading tone in soprano does not resolve to tonic
+m. 7 beat 4: approximate leading tone in soprano does not resolve to tonic
+m. 7 beat 4.25: approximate leading tone in soprano does not resolve to tonic
+m. 7 beat 4.5: approximate leading tone in soprano does not resolve to tonic
+m. 7 beat 4.75: approximate leading tone in soprano does not resolve to tonic
+m. 8 beat 1: approximate leading tone in soprano does not resolve to tonic
+m. 8 beat 1.25: approximate leading tone in soprano does not resolve to tonic
+m. 8 beat 1.5: approximate leading tone in soprano does not resolve to tonic
+m. 8 beat 1.75: approximate leading tone in soprano does not resolve to tonic
+m. 9 beat 4: approximate leading tone in soprano does not resolve to tonic
+m. 9 beat 4.25: approximate leading tone in soprano does not resolve to tonic
+m. 9 beat 4.5: approximate leading tone in soprano does not resolve to tonic
+m. 9 beat 4.75: approximate leading tone in soprano does not resolve to tonic
+
+Limitations:
+Seventh-resolution checking requires chord labels; unavailable labels are reported in harmony_rules.
+Cadence correctness is a TODO when Roman numeral labels are unavailable.
+Seventh-resolution checking is not run because chord labels are unavailable.
+Cadence correctness requires Roman numeral cadence labels and is marked TODO for unlabeled scores.

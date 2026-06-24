@@ -1,0 +1,34 @@
+{
+  "approved_for_commercial_distribution": false,
+  "project": "Explainable Neural-Symbolic Choral Harmonization with Common-Practice Harmony and Counterpoint Constraints",
+  "delivery_zip": "expert_eval\\project1\\deliverables\\project1_pro_playback_mp3_100_FINAL_20260624_131322.zip",
+  "delivery_zip_sha256": "260d18cda1a0df4cd14bc2266ea8a07b9064c3d1bed1458738ce1a36765cf422",
+  "review_date": "YYYY-MM-DD",
+  "reviewer_name": "TODO",
+  "reviewer_role": "TODO",
+  "scope_reviewed": [
+    "Generated SATB MusicXML/PDF score delivery package",
+    "Rendered MP3/MIDI listening aids",
+    "Third-party playback notices and SoundFont license files",
+    "Expert/customer evaluation forms",
+    "README and delivery documentation"
+  ],
+  "required_checks": {
+    "dataset_and_generated_score_rights_reviewed": false,
+    "soundfont_and_playback_tool_licenses_reviewed": false,
+    "redistribution_scope_approved": false,
+    "privacy_or_human_subjects_requirements_reviewed": false,
+    "commercial_claims_reviewed": false
+  },
+  "approved_uses": [
+    "TODO: e.g., internal demo",
+    "TODO: e.g., expert evaluation",
+    "TODO: e.g., commercial pilot"
+  ],
+  "excluded_uses": [
+    "TODO"
+  ],
+  "notes": "Prefilled draft only. Keep approved_for_commercial_distribution=false until a real legal/commercial reviewer completes every required check and signs the final file.",
+  "created_from_release_manifest_at_utc": "2026-06-24T05:21:24+00:00",
+  "draft_status": "manual_review_required_not_approved"
+}

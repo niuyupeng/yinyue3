@@ -1,0 +1,5 @@
+\section{Evaluation Metrics}
+
+The evaluation script reports pitch-token accuracy, voice-wise accuracy, cross entropy, negative log likelihood, rule violations per 100 quantized score positions, voice-range violation rate, voice-crossing rate, spacing violation rate, parallel fifths per 100 score positions, parallel octaves per 100 score positions, seventh-resolution violation rate, cadence-correctness or cadence-unknown rate, Roman numeral extraction coverage, chord-label coverage, generated-score harmonic-label coverage, generation validity rate, and MusicXML export success rate.
+
+The rule metrics are computed on generated SATB tokens after optional rule-guided decoding and before or during MusicXML export. They are intended to quantify score-level common-practice diagnostics rather than listener preference. Human expert evaluation is therefore defined separately with blind ratings of harmonic correctness, voice-leading correctness, seventh-resolution correctness, cadence quality, singability, stylistic consistency, usefulness for composition pedagogy, and overall preference.
