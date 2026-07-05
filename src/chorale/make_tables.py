@@ -111,6 +111,18 @@ EXPECTED_ABLATIONS = [
     },
 ]
 
+RULE_SUMMARY_EXPERIMENTS = [
+    EXPECTED_EXPERIMENTS[0],
+    EXPECTED_EXPERIMENTS[1],
+    EXPECTED_EXPERIMENTS[3],
+    EXPECTED_EXPERIMENTS[4],
+    EXPECTED_EXPERIMENTS[5],
+    EXPECTED_ABLATIONS[2],
+    EXPECTED_ABLATIONS[3],
+    EXPECTED_ABLATIONS[4],
+    EXPECTED_ABLATIONS[5],
+]
+
 MAIN_COLUMNS = [
     ("display", "Experiment"),
     ("task", "Task"),
@@ -267,12 +279,15 @@ def find_metric_row(rows: list[dict[str, str]], expected: dict[str, object]) -> 
 def row_preference_score(row: dict[str, str]) -> int:
     joined = " ".join([row.get("model", ""), row.get("checkpoint", "")]).lower()
     score = 0
+    # Prefer full enhanced reruns over older exploratory reranking sweeps.
     if "enhanced" in joined:
-        score += 10
+        score += 100
+    if "202607" in joined:
+        score += 25
     if "rerankfix" in joined:
-        score += 20
+        score += 10
     if "tuned" in joined:
-        score += 30
+        score += 15
     if "fastcheck" in joined or "smoke" in joined:
         score -= 100
     return score
@@ -300,7 +315,7 @@ def write_rule_table(path: Path, rows: list[dict[str, str]], full_missing: bool)
         ("seventh_resolution", "7th/100"),
         ("leading_tone_resolution", "LT/100"),
     ]
-    caption = "Compact rule-violation summary from non-smoke logged evaluations. Full per-rule counts remain in results/project1_rule_violations.csv."
+    caption = "Compact rule-violation summary for selected primary and ablation evaluations. Full per-rule counts remain in results/project1_rule_violations.csv."
     if full_missing:
         caption += " Full RTX rule rows were not available in the inspected result files."
     if not rows:
@@ -318,9 +333,34 @@ def write_rule_table(path: Path, rows: list[dict[str, str]], full_missing: bool)
             }
         ]
     else:
-        rows = compact_rule_rows(rows)
+        rows = expected_rule_summary_rows(compact_rule_rows(rows))
     path.write_text(latex_table(rows, columns, caption), encoding="utf-8")
     return str(path)
+
+
+def expected_rule_summary_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    selected: list[dict[str, str]] = []
+    for expected in RULE_SUMMARY_EXPERIMENTS:
+        match = find_metric_row(rows, expected)
+        row = {
+            "model": expected["display"],
+            "task": expected["task"],
+            "rule_guided_decoding": expected["rule_guided"],
+        }
+        if match:
+            row.update(match)
+            row["model"] = expected["display"]
+        for rule in [
+            "parallel_fifth",
+            "parallel_octave",
+            "voice_crossing",
+            "spacing",
+            "seventh_resolution",
+            "leading_tone_resolution",
+        ]:
+            row.setdefault(rule, "not available")
+        selected.append(row)
+    return selected
 
 
 def compact_rule_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:

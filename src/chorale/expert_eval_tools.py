@@ -411,7 +411,7 @@ def write_summary_csv(path: Path, summary: dict[str, dict[str, float]]) -> None:
 def write_latex_tables(summary: dict[str, object], tables_dir: Path) -> None:
     tables_dir.mkdir(parents=True, exist_ok=True)
     path = tables_dir / "project1_expert_eval_results.tex"
-    if summary.get("status") != "completed":
+    if summary.get("status") != "completed" or not has_publication_ready_expert_summary(summary):
         path.write_text(make_pending_latex_table(), encoding="utf-8")
         return
     absolute = summary.get("absolute", {})
@@ -444,6 +444,17 @@ def write_latex_tables(summary: dict[str, object], tables_dir: Path) -> None:
                 lines.append(f"{latex_escape(metric)} & {counts} & {int(float(values.get('n', 0.0)))} \\\\")
     lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}", ""])
     path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def has_publication_ready_expert_summary(summary: dict[str, object], min_raters: int = 3) -> bool:
+    """Return True only when expert ratings are suitable for paper reporting."""
+    try:
+        rating_file_count = int(summary.get("rating_file_count", 0))
+        absolute_rows = int(summary.get("absolute_completed_rows", 0))
+        paired_rows = int(summary.get("paired_completed_rows", 0))
+    except (TypeError, ValueError):
+        return False
+    return rating_file_count >= min_raters and (absolute_rows > 0 or paired_rows > 0)
 
 
 def make_pending_latex_table() -> str:

@@ -22,12 +22,80 @@ MODEL_ORDER = [
     ("ablation_no_rule_guided_decoding", "No rules"),
 ]
 
+METRIC_SOURCE_MODELS = {
+    "lstm_baseline",
+    "transformer_no_constraints",
+    "proposed_neural_symbolic_rule_guided",
+    "ablation_no_harmony_conditioning",
+    "ablation_no_iterative_refinement",
+    "ablation_no_rule_guided_decoding",
+}
+
+RULE_SOURCE_MODELS = {
+    "transformer_no_constraints",
+    "proposed_neural_symbolic_rule_guided",
+    "ablation_no_harmony_conditioning",
+    "ablation_no_rule_guided_decoding",
+}
+
+RULE_SOURCE_RULES = [
+    ("parallel_fifth", "Parallel fifths"),
+    ("parallel_octave", "Parallel octaves"),
+    ("leading_tone_resolution", "Leading-tone resolution"),
+    ("voice_crossing", "Voice crossing"),
+    ("spacing", "Adjacent-voice spacing"),
+    ("seventh_resolution", "Seventh resolution"),
+]
+
+MODEL_ALIASES = {
+    "lstm_baseline": {"lstm_baseline", "chorale_lstm"},
+    "transformer_no_constraints": {"transformer_no_constraints", "chorale_transformer_no_constraints"},
+    "proposed_neural_symbolic_rule_guided": {
+        "proposed_neural_symbolic_rule_guided_enhanced",
+        "proposed_neural_symbolic_rule_guided_rerankfix_tuned",
+        "proposed_neural_symbolic_rule_guided_rerankfix",
+        "proposed_neural_symbolic_rule_guided",
+        "proposed_transformer_rule_guided",
+        "transformer_rule_guided_decoding",
+        "chorale_rule_guided_decoding",
+    },
+    "ablation_no_harmony_conditioning": {
+        "ablation_no_harmony_conditioning_enhanced",
+        "ablation_no_harmony_conditioning",
+        "chorale_ablation_no_harmony",
+    },
+    "ablation_no_iterative_refinement": {
+        "ablation_no_iterative_refinement_enhanced",
+        "ablation_no_iterative_refinement",
+        "chorale_ablation_no_iterative_refinement",
+    },
+    "ablation_no_rule_guided_decoding": {
+        "ablation_no_rule_guided_decoding_enhanced",
+        "ablation_no_rule_guided_decoding",
+        "chorale_ablation_no_rule_guided_decoding",
+    },
+    "masked_infilling": {
+        "proposed_neural_symbolic_masked_infilling_enhanced",
+        "proposed_neural_symbolic_masked_infilling",
+        "masked_infilling",
+        "transformer_masked_infilling",
+        "chorale_masked_infilling",
+    },
+    "soprano_to_satb": {
+        "proposed_neural_symbolic_soprano_to_satb_enhanced",
+        "proposed_neural_symbolic_soprano_to_satb",
+        "soprano_to_satb",
+        "transformer_soprano_to_satb",
+        "chorale_soprano_to_satb",
+    },
+}
+
 RUN_ORDER = [
-    ("chorale_lstm_full_20260615_085410", "LSTM"),
+    ("chorale_lstm", "LSTM"),
     ("chorale_transformer_no_constraints", "Vanilla"),
     ("chorale_rule_guided_decoding", "Proposed"),
-    ("chorale_ablation_no_harmony", "No harmony"),
-    ("chorale_ablation_no_rule_guided_decoding", "No rules"),
+    ("chorale_ablation_no_harmony_enhanced_20260616_212438", "No harmony"),
+    ("chorale_ablation_no_rule_guided_decoding_enhanced_20260616_212438", "No rules"),
 ]
 
 PALETTE = {
@@ -58,11 +126,19 @@ CONFIG_BY_MODEL = {
     "lstm_baseline": "configs/chorale_lstm.yaml",
     "transformer_no_constraints": "configs/chorale_transformer_no_constraints.yaml",
     "proposed_neural_symbolic_rule_guided": "configs/chorale_rule_guided_decoding.yaml",
+    "proposed_neural_symbolic_rule_guided_enhanced": "configs/chorale_rule_guided_decoding.yaml",
+    "proposed_neural_symbolic_rule_guided_rerankfix": "configs/chorale_rule_guided_decoding.yaml",
+    "proposed_neural_symbolic_rule_guided_rerankfix_tuned": "configs/chorale_rule_guided_decoding.yaml",
     "ablation_no_harmony_conditioning": "configs/chorale_main.yaml",
+    "ablation_no_harmony_conditioning_enhanced": "configs/chorale_main.yaml",
     "ablation_no_iterative_refinement": "configs/chorale_main.yaml",
+    "ablation_no_iterative_refinement_enhanced": "configs/chorale_main.yaml",
     "ablation_no_rule_guided_decoding": "configs/chorale_transformer_no_constraints.yaml",
+    "ablation_no_rule_guided_decoding_enhanced": "configs/chorale_transformer_no_constraints.yaml",
     "masked_infilling": "configs/chorale_masked_infilling.yaml",
+    "proposed_neural_symbolic_masked_infilling_enhanced": "configs/chorale_masked_infilling.yaml",
     "soprano_to_satb": "configs/chorale_soprano_to_satb.yaml",
+    "proposed_neural_symbolic_soprano_to_satb_enhanced": "configs/chorale_soprano_to_satb.yaml",
 }
 
 PROJECT_METADATA = {
@@ -113,10 +189,69 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(f))
 
 
+def preferred_metric_map(rows: list[dict[str, str]]) -> dict[str, dict[str, str]]:
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        canonical = canonical_model_name(row.get("model", ""))
+        grouped.setdefault(canonical, []).append(row)
+    return {
+        canonical: sorted(candidates, key=row_preference_score, reverse=True)[0]
+        for canonical, candidates in grouped.items()
+        if candidates
+    }
+
+
+def preferred_rule_map(rows: list[dict[str, str]]) -> dict[tuple[str, str], dict[str, str]]:
+    preferred_models: dict[str, str] = {}
+    model_candidates: dict[str, set[str]] = {}
+    for row in rows:
+        canonical = canonical_model_name(row.get("model", ""))
+        model_candidates.setdefault(canonical, set()).add(row.get("model", ""))
+    for canonical, candidates in model_candidates.items():
+        preferred_models[canonical] = sorted(
+            candidates,
+            key=lambda model: row_preference_score({"model": model}),
+            reverse=True,
+        )[0]
+
+    selected: dict[tuple[str, str], dict[str, str]] = {}
+    for row in rows:
+        canonical = canonical_model_name(row.get("model", ""))
+        if row.get("model", "") != preferred_models.get(canonical, ""):
+            continue
+        selected[(canonical, row.get("rule", ""))] = row
+    return selected
+
+
+def canonical_model_name(model: str) -> str:
+    normalized = model.lower()
+    for canonical, aliases in MODEL_ALIASES.items():
+        lowered_aliases = {alias.lower() for alias in aliases}
+        if normalized in lowered_aliases or any(normalized.startswith(alias) for alias in lowered_aliases):
+            return canonical
+    return model
+
+
+def row_preference_score(row: dict[str, str]) -> int:
+    joined = " ".join([row.get("model", ""), row.get("checkpoint", "")]).lower()
+    score = 0
+    if "enhanced" in joined:
+        score += 100
+    if "202607" in joined:
+        score += 25
+    if "rerankfix" in joined:
+        score += 10
+    if "tuned" in joined:
+        score += 15
+    if "fastcheck" in joined or "smoke" in joined:
+        score -= 100
+    return score
+
+
 def plot_metric_summary(rows: list[dict[str, str]], output_path: Path, plt, rule_csv: Path) -> Path:
     import numpy as np
 
-    row_by_model = {row.get("model", ""): row for row in rows}
+    row_by_model = preferred_metric_map(rows)
     primary = [(model, label, row_by_model[model]) for model, label in PRIMARY_MODEL_ORDER if model in row_by_model]
     fig = plt.figure(figsize=(7.1, 4.45), constrained_layout=True)
     gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.0], height_ratios=[1.0, 1.0])
@@ -200,9 +335,8 @@ def plot_metric_summary(rows: list[dict[str, str]], output_path: Path, plt, rule
     ax_c.grid(axis="x", alpha=0.18, linewidth=0.5)
     ax_c.set_title("Targeted rule changes", loc="left", fontsize=7, pad=3)
     for yi, value in zip(yy, changes):
-        align = "right" if value < 0 else "left"
-        offset = -3 if value < 0 else 3
-        ax_c.text(value + offset, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=6)
+        text_x, align = bar_label_position(value)
+        ax_c.text(text_x, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=6)
 
     tradeoffs = [
         ("Total violations", "rule_violations_per_100_timesteps"),
@@ -210,7 +344,7 @@ def plot_metric_summary(rows: list[dict[str, str]], output_path: Path, plt, rule
         ("Leading tone", None),
     ]
     rule_rows = [row for row in read_csv(rule_csv) if not is_smoke_row(row)]
-    rule_map = {(row.get("model", ""), row.get("rule", "")): row for row in rule_rows}
+    rule_map = preferred_rule_map(rule_rows)
     trade_names, trade_changes = [], []
     for name, key in tradeoffs:
         if key is None:
@@ -228,12 +362,13 @@ def plot_metric_summary(rows: list[dict[str, str]], output_path: Path, plt, rule
     ax_d.set_yticks(yy)
     ax_d.set_yticklabels(trade_names)
     ax_d.invert_yaxis()
-    ax_d.set_xlim(-40, 80)
+    ax_d.set_xlim(-100, 80)
     ax_d.set_xlabel("Change vs vanilla, fewer is better (%)")
     ax_d.grid(axis="x", alpha=0.18, linewidth=0.5)
-    ax_d.set_title("Unresolved trade-offs", loc="left", fontsize=7, pad=3)
+    ax_d.set_title("Additional rule changes", loc="left", fontsize=7, pad=3)
     for yi, value in zip(yy, trade_changes):
-        ax_d.text(value + 3, yi, f"{value:+.0f}%", va="center", ha="left", fontsize=6)
+        text_x, align = bar_label_position(value)
+        ax_d.text(text_x, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=6)
 
     for panel, ax in zip("abcd", [ax_a, ax_b, ax_c, ax_d]):
         add_panel_label(ax, panel)
@@ -303,7 +438,7 @@ def plot_rule_violations(rule_csv: Path, output_path: Path, plt) -> Path:
     if not rows:
         return write_note_figure(output_path, "Rule-violation bars not available", "No non-smoke rows were found in results/project1_rule_violations.csv.", plt)
 
-    row_map = {(row.get("model", ""), row.get("rule", "")): row for row in rows}
+    row_map = preferred_rule_map(rows)
     model_keys = [
         ("transformer_no_constraints", "Vanilla"),
         ("proposed_neural_symbolic_rule_guided", "Proposed"),
@@ -367,9 +502,8 @@ def plot_rule_violations(rule_csv: Path, output_path: Path, plt) -> Path:
     ax_delta.set_title("Directional change", loc="left", fontsize=7, pad=3)
     ax_delta.grid(axis="x", alpha=0.18, linewidth=0.5)
     for yi, value in zip(y, changes):
-        align = "right" if value < 0 else "left"
-        offset = -3 if value < 0 else 3
-        ax_delta.text(value + offset, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=5.8)
+        text_x, align = bar_label_position(value)
+        ax_delta.text(text_x, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=5.8)
     add_panel_label(ax, "a")
     add_panel_label(ax_delta, "b")
     save_all_formats(fig, output_path, plt)
@@ -439,8 +573,16 @@ def annotate_last_point(ax, x_values: list[int], y_values: list[float | None], l
     ax.text(x + offset[0], y + offset[1], label, color=color, fontsize=5.8, va="center", ha="left")
 
 
+def bar_label_position(value: float) -> tuple[float, str]:
+    if value <= -92:
+        return value + 3, "left"
+    if value < 0:
+        return value - 3, "right"
+    return value + 3, "left"
+
+
 def ordered_metric_rows(rows: list[dict[str, str]]) -> list[tuple[str, str, dict[str, str]]]:
-    by_model = {row.get("model", ""): row for row in rows}
+    by_model = preferred_metric_map(rows)
     selected: list[tuple[str, str, dict[str, str]]] = []
     for model, label in MODEL_ORDER:
         row = by_model.get(model)
@@ -494,6 +636,7 @@ def write_source_data(output_dir: Path, metrics_rows: list[dict[str, str]], rule
     output_dir.mkdir(parents=True, exist_ok=True)
     if any(is_smoke_row(row) for row in metrics_rows):
         raise ValueError("Smoke rows must not be passed to final figure source-data export.")
+    metric_source_rows = selected_metric_source_rows(metrics_rows)
     generated_at = datetime.now().isoformat(timespec="seconds")
     software = software_versions()
     metric_fields = [
@@ -540,7 +683,7 @@ def write_source_data(output_dir: Path, metrics_rows: list[dict[str, str]], rule
     with (output_dir / "project1_metrics_source_data.csv").open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=metric_fields)
         writer.writeheader()
-        for row in metrics_rows:
+        for row in metric_source_rows:
             out = base_source_row(
                 figure="project1_metrics_summary",
                 panel="a-d",
@@ -568,6 +711,7 @@ def write_source_data(output_dir: Path, metrics_rows: list[dict[str, str]], rule
             writer.writerow(out)
 
     rule_rows = [row for row in read_csv(rule_csv) if not is_smoke_row(row)]
+    rule_source_rows = selected_rule_source_rows(rule_rows)
     rule_fields = [
         "figure",
         "panel",
@@ -597,7 +741,7 @@ def write_source_data(output_dir: Path, metrics_rows: list[dict[str, str]], rule
     with (output_dir / "project1_rule_source_data.csv").open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=rule_fields)
         writer.writeheader()
-        for row in rule_rows:
+        for row in rule_source_rows:
             out = base_source_row(
                 figure="project1_rule_violations_bar",
                 panel="a-b",
@@ -696,16 +840,16 @@ def write_source_data(output_dir: Path, metrics_rows: list[dict[str, str]], rule
             "figure": "project1_metrics_summary",
             "source_data_file": "project1_metrics_source_data.csv",
             "source_file": "results/project1_metrics.csv",
-            "plotted_rows": str(len(metrics_rows)),
-            "excluded_rows": "smoke rows and rows without logged full-evaluation metrics",
+            "plotted_rows": str(len(metric_source_rows)),
+            "excluded_rows": "smoke rows, historical exploratory rows, and rows not plotted in the summary panels",
             "statistics_note": "single seed; no confidence intervals or significance tests",
         },
         {
             "figure": "project1_rule_violations_bar",
             "source_data_file": "project1_rule_source_data.csv",
             "source_file": str(rule_csv),
-            "plotted_rows": str(len(rule_rows)),
-            "excluded_rows": "smoke rows",
+            "plotted_rows": str(len(rule_source_rows)),
+            "excluded_rows": "smoke rows, historical exploratory rows, and rule/model combinations not plotted in the rule figure",
             "statistics_note": "automatic rule counts per 100 quantized SATB score positions",
         },
         {
@@ -736,6 +880,52 @@ def write_source_data(output_dir: Path, metrics_rows: list[dict[str, str]], rule
         for row in manifest_rows:
             row.update({"generated_at": generated_at, "script": "src/chorale/plot_results.py", "command": "python -m chorale.plot_results"})
             writer.writerow(row)
+
+
+def selected_metric_source_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    preferred = preferred_metric_map(rows)
+    selected: list[dict[str, str]] = []
+    for canonical, _ in MODEL_ORDER:
+        if canonical in METRIC_SOURCE_MODELS and canonical in preferred:
+            selected.append(preferred[canonical])
+    return selected
+
+
+def selected_rule_source_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    rule_map = preferred_rule_map(rows)
+    selected: list[dict[str, str]] = []
+    for canonical, _ in MODEL_ORDER:
+        if canonical not in RULE_SOURCE_MODELS:
+            continue
+        for rule, _ in RULE_SOURCE_RULES:
+            row = dict(rule_map.get((canonical, rule), {}))
+            if not row:
+                rule_guided = "False" if canonical in {"transformer_no_constraints", "ablation_no_rule_guided_decoding"} else "True"
+                row = {
+                    "model": preferred_model_name(rows, canonical),
+                    "task": "soprano_to_satb",
+                    "rule_guided_decoding": rule_guided,
+                    "rule": rule,
+                    "count": "0",
+                    "per_100_timesteps": "0",
+                }
+            selected.append(row)
+    return selected
+
+
+def preferred_model_name(rows: list[dict[str, str]], canonical: str) -> str:
+    candidates = {
+        row.get("model", "")
+        for row in rows
+        if canonical_model_name(row.get("model", "")) == canonical
+    }
+    if not candidates:
+        return canonical
+    return sorted(
+        candidates,
+        key=lambda model: row_preference_score({"model": model}),
+        reverse=True,
+    )[0]
 
 
 def write_qa_note(path: Path) -> None:
@@ -783,6 +973,7 @@ def is_smoke_row(row: dict[str, str]) -> bool:
 
 
 def model_label_for(model: str) -> str:
+    model = canonical_model_name(model)
     for key, label in MODEL_ORDER:
         if key == model:
             return label

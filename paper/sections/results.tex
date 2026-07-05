@@ -2,7 +2,7 @@
 
 \subsection{Logged Full-Experiment Artifacts}
 
-The consolidated metric file \texttt{results/project1\_metrics.csv} contains completed non-smoke rows for the LSTM baseline, the vanilla/no-constraints Transformer, the proposed rule-guided Transformer, the masked-infilling task, and the soprano-to-SATB task. It also contains completed ablation rows for no harmonic conditioning, no iterative refinement, and no rule-guided decoding. All non-smoke evaluations reported MusicXML export success rate 1.0 across 37 test generations.
+The consolidated metric file \texttt{results/project1\_metrics.csv} contains completed non-smoke rows for the LSTM baseline, the vanilla/no-constraints Transformer, the proposed rule-guided Transformer, the masked-infilling task, and the soprano-to-SATB task. It also contains logged ablation rows for no harmonic conditioning, no iterative refinement, no rule-guided decoding, and no voice-relation attention. All non-smoke primary evaluations reported MusicXML export success rate 1.0 across 37 test generations.
 
 \input{tables/project1_main_results}
 
@@ -17,13 +17,13 @@ Figure~\ref{fig:project1-main-metrics} summarizes the logged full-run metrics us
 
 \subsection{Pitch Accuracy and Likelihood}
 
-For the soprano-to-SATB setting, the proposed rule-guided Transformer improved pitch accuracy relative to the vanilla/no-constraints Transformer from 0.7682 to 0.8242 and reduced cross entropy from 0.8708 to 0.5864. The LSTM baseline reached pitch accuracy 0.7765 and cross entropy 0.7853. A separately logged soprano-to-SATB task run closely matched the proposed configuration, with pitch accuracy 0.8238 and cross entropy 0.5863. The masked-infilling task achieved the highest logged pitch accuracy, 0.8290, but this row reflects a different conditioning problem and is not a direct replacement for soprano-only harmonization.
+For the soprano-to-SATB setting, the proposed rule-guided Transformer improved pitch accuracy relative to the vanilla/no-constraints Transformer from 0.7682 to 0.8233 and reduced cross entropy from 0.8707 to 0.5942. The LSTM baseline reached pitch accuracy 0.7771 and cross entropy 0.7810. A separately logged soprano-to-SATB task run closely matched the proposed configuration, with pitch accuracy 0.8276 and cross entropy 0.5986. The masked-infilling task achieved pitch accuracy 0.8366 and cross entropy 0.5776, but this row reflects a different conditioning problem and is not a direct replacement for soprano-only harmonization.
 
 \subsection{Rule-Violation Profile}
 
-The proposed rule-guided Transformer reduced several targeted common-practice diagnostics relative to the vanilla/no-constraints Transformer. Parallel fifths decreased from 2.8202 to 1.9636 per 100 score positions. Voice crossing rate decreased from 0.0051 to 0.0014, spacing violation rate decreased from 0.0013 to 0.0003, and seventh-resolution violation rate decreased from 0.0348 to 0.0216. These logged changes support the use of explicit score-level checks for selected rule classes.
+The proposed rule-guided Transformer reduced several targeted common-practice diagnostics relative to the vanilla/no-constraints Transformer in the main metric rows. Parallel fifths decreased from 2.7939 to 0.0000 per 100 score positions, and parallel octaves decreased from 2.4117 to 0.0791 per 100 score positions. Voice crossing rate decreased from 0.0053 to 0.0000, spacing violation rate decreased from 0.0013 to 0.0000, and seventh-resolution violation rate decreased from 0.0295 to 0.0083. These logged changes support the use of explicit score-level checks for selected rule classes.
 
-The aggregate rule profile was more mixed. Total rule violations per 100 score positions increased from 27.4381 for the vanilla/no-constraints Transformer to 33.4212 for the proposed model, and parallel octaves increased from 2.4381 to 3.6769 per 100 score positions. The detailed rule table indicates that leading-tone-resolution flags dominate the proposed model's total count. The present decoder should therefore be read as a targeted repair and explanation layer rather than a global constraint optimizer.
+The aggregate main metric also improved, with total automatic rule flags decreasing from 14.9051 for the vanilla/no-constraints Transformer to 3.7823 for the proposed model per 100 score positions. This does not make the decoder a complete constraint solver: the detailed rule table is an automatic diagnostic view, leading-tone and cadence evidence depend on inferred harmonic labels, and generation-level validity remains an explicit limitation rather than a solved outcome.
 
 \input{tables/project1_rule_violations}
 
@@ -38,15 +38,15 @@ The rule-level pattern is visualized in Figure~\ref{fig:project1-rule-bars}.
 
 \subsection{Ablation Evidence}
 
-The ablations separate the effects of harmonic conditioning, iterative refinement, and symbolic decoding. Removing harmonic conditioning reduced pitch accuracy to 0.7738 and increased cross entropy to 0.8275, close to the vanilla/no-constraints baseline. This result indicates that automatic harmonic context contributes substantially to the prediction gain. However, the no-harmony ablation had fewer total rule violations than the full proposed model, so improved likelihood did not automatically imply fewer aggregate rule flags.
+The logged enhanced ablations separate the effects of harmonic conditioning, iterative refinement, and symbolic decoding. Removing harmonic conditioning reduced pitch accuracy to 0.7716 and increased cross entropy to 0.8469, close to the vanilla/no-constraints baseline. This result indicates that automatic harmonic context contributes substantially to the prediction gain. The same ablation increased total automatic rule flags to 57.7491 per 100 score positions, so the current evidence does not support removing harmonic context.
 
-Removing iterative refinement left pitch accuracy and cross entropy nearly unchanged relative to the full proposed model, with 0.8241 accuracy and 0.5863 cross entropy, but it changed the rule profile and increased parallel octaves to 4.3490 per 100 score positions. Removing rule-guided decoding also left accuracy nearly unchanged, 0.8243, but increased total violations to 34.3437 per 100 score positions, voice crossing rate to 0.0033, and spacing violation rate to 0.0008. These rows suggest that symbolic decoding mainly affects selected structural diagnostics rather than token likelihood.
+Removing iterative refinement left pitch accuracy and cross entropy nearly unchanged relative to the full proposed model, with 0.8249 accuracy and 0.5938 cross entropy, but it changed the rule profile and increased parallel octaves to 8.3158 per 100 score positions. Removing rule-guided decoding also left accuracy nearly unchanged, 0.8238, but increased total automatic rule flags to 32.6173 per 100 score positions, voice crossing rate to 0.0025, and spacing violation rate to 0.0009. These rows suggest that symbolic decoding mainly affects selected structural diagnostics rather than token likelihood.
 
 \input{tables/project1_ablation_results}
 
 \subsection{Harmonic Labels, Cadence Evidence, and Training Curves}
 
-The automatic harmonic-label pipeline produced high source coverage for the evaluated Bach test inputs, with non-smoke source Roman-numeral or chord-label coverage 0.9953. Generated-score harmonic coverage was also high, ranging from 0.9942 to 0.9958 in the logged primary rows. Cadence evidence remained uncertain: cadence-unknown rate was 0.9189 for the proposed, masked-infilling, and soprano-to-SATB task entries, and 0.9730 for the LSTM and vanilla/no-constraints entries. Cadence unknowns are therefore part of the method's uncertainty reporting, not a substitute for expert analysis.
+The automatic harmonic-label pipeline produced high source coverage for the evaluated Bach test inputs, with non-smoke source Roman-numeral or chord-label coverage 0.9953. Generated-score harmonic coverage ranged from 0.9844 to 0.9942 in the logged primary rows. Cadence evidence remained uncertain: cadence-unknown rate was 0.4054 for the proposed rule-guided Transformer, 0.3784 for the vanilla/no-constraints Transformer, 0.2162 for the LSTM baseline, 0.4054 for masked infilling, and 0.3514 for the separately logged soprano-to-SATB task. Cadence unknowns are therefore part of the method's uncertainty reporting, not a substitute for expert analysis.
 
 \input{tables/project1_harmony_label_coverage}
 
@@ -63,4 +63,4 @@ Figure~\ref{fig:project1-training-curves} reports the selected training historie
 
 No completed expert ratings were found in the inspected expert-evaluation files. The current package supplies anonymized score materials and blank forms, so expert evaluation is pending. This study remains necessary because token accuracy and rule counts do not fully capture cadence quality, singability, stylistic consistency, or usefulness in composition pedagogy.
 
-\input{tables/project1_expert_eval_results}
+\input{tables/project1_expert_eval_template}

@@ -6,11 +6,11 @@ We evaluated six logged primary entries: an LSTM baseline, a vanilla Transformer
 
 \subsection{Ablation Design}
 
-Three ablations were used to test whether the proposed system's behaviour came from specific neural-symbolic components rather than from model size alone. The no-harmony ablation removed automatic harmonic conditioning. The no-refinement ablation replaced iterative masked rewriting with a single prediction pass. The no-rule ablation disabled symbolic rule-guided decoding while retaining the neural architecture. All ablation rows were generated from local runs and logged through the same evaluation scripts as the primary systems.
+Four logged ablations were used to test whether the proposed system's behaviour came from specific neural-symbolic components rather than from model size alone. The no-harmony ablation removed automatic harmonic conditioning. The no-refinement ablation replaced iterative masked rewriting with a single prediction pass. The no-rule ablation disabled symbolic rule-guided decoding while retaining the neural architecture. The no-voice-relation ablation removed the voice-relation attention component. All ablation rows were generated from local runs and logged through the same evaluation scripts as the primary systems.
 
 \subsection{Artifact Ingestion}
 
-Tables and figures were generated only from stored CSV and JSON files. The inspected metric file contains one CPU smoke row, five non-smoke primary rows, and three non-smoke ablation rows. The smoke row is retained as a software check and is not used as a final experimental result. The logged vanilla Transformer and Transformer-without-constraints rows point to the same no-constraints checkpoint, so they are treated as the same baseline when interpreting ablations.
+Tables and figures were generated only from stored CSV and JSON files. The inspected metric file contains one CPU smoke row, five non-smoke primary rows, and four non-smoke ablation rows used in the current ablation table, plus historical exploratory rows retained in the CSV audit trail. The smoke row is retained as a software check and is not used as a final experimental result. The logged vanilla Transformer and Transformer-without-constraints rows point to the same no-constraints checkpoint, so they are treated as the same baseline when interpreting ablations.
 
 \subsection{Generated Scores and Expert Materials}
 

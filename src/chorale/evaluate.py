@@ -305,6 +305,14 @@ def write_project1_outputs(
     }
     append_unique_csv(metrics_csv, row, unique_key=("model", "task", "rule_guided_decoding"))
 
+    remove_csv_group(
+        rule_csv,
+        {
+            "model": metrics["model"],
+            "task": metrics["task"],
+            "rule_guided_decoding": metrics["rule_guided_decoding"],
+        },
+    )
     for rule, count in sorted(rule_counts.items()):
         append_unique_csv(
             rule_csv,
@@ -374,6 +382,27 @@ def append_unique_csv(path: Path, row: dict, unique_key: tuple[str, ...]) -> Non
     rows.append(row_as_str)
     with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=list(row_as_str.keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def remove_csv_group(path: Path, match: dict[str, object]) -> None:
+    if not path.exists():
+        return
+    with path.open("r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = list(reader.fieldnames or [])
+        rows = list(reader)
+    if not fieldnames:
+        return
+    match_as_str = {key: "" if value is None else str(value) for key, value in match.items()}
+    rows = [
+        row
+        for row in rows
+        if not all(row.get(key, "") == expected for key, expected in match_as_str.items())
+    ]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
 
