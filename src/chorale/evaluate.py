@@ -12,18 +12,28 @@ from torch.utils.data import DataLoader
 
 from chorale.data.build_dataset import build_dataset_from_config
 from chorale.data.chorale_dataset import ChoraleDataset
+from chorale.constraint_decoding.constrained_beam import apply_cih_constrained_beam_search
 from chorale.decoding import decode_predictions
 from chorale.export_musicxml import export_tokens_to_musicxml
 from chorale.make_tables import build_project1_tables_from_csv
 from chorale.theory.explain_report import build_explanation_report
 from chorale.theory.roman_numeral import annotate_tokens_harmony
-from chorale.theory.rule_guided_decoding import apply_constraint_reranking, apply_rule_guided_decoding
+from chorale.theory.rule_guided_decoding import (
+    apply_constrained_beam_search,
+    apply_constraint_reranking,
+    apply_rule_guided_decoding,
+)
 from chorale.train import batch_to_device, build_model, model_forward
 from chorale.utils import ensure_dir, get_device, load_config, safe_torch_load, write_json
 
 
 @torch.no_grad()
-def evaluate(config_path: str | Path, checkpoint_path: str | Path | None = None, output_path: str | Path | None = None) -> dict:
+def evaluate(
+    config_path: str | Path,
+    checkpoint_path: str | Path | None = None,
+    output_path: str | Path | None = None,
+    write_project_outputs: bool = True,
+) -> dict:
     config = load_config(config_path)
     data_path = Path(config["data"]["processed_path"])
     if not data_path.exists():
@@ -38,7 +48,7 @@ def evaluate(config_path: str | Path, checkpoint_path: str | Path | None = None,
     )
     eval_cfg = config.get("eval", {})
     loader = DataLoader(ds, batch_size=int(eval_cfg.get("batch_size", 8)), shuffle=False, num_workers=0)
-    device = get_device()
+    device = get_device(config.get("device"))
     checkpoint_path = Path(checkpoint_path or Path(config["run"]["output_dir"]) / "best.pt")
     checkpoint = safe_torch_load(checkpoint_path, map_location=device)
     model = build_model(checkpoint.get("config", config), vocab_size=int(checkpoint["vocab_size"])).to(device)
@@ -52,6 +62,7 @@ def evaluate(config_path: str | Path, checkpoint_path: str | Path | None = None,
     refinement_strategy = str(decoding_cfg.get("refinement_strategy", "confidence"))
     remask_fraction = float(decoding_cfg.get("remask_fraction", 0.35))
     constraints_cfg = config.get("constraints", {})
+    constraint_decoder_cfg = config.get("constraint_decoder", {})
 
     max_batches = eval_cfg.get("max_batches")
     max_batches = int(max_batches) if max_batches is not None else None
@@ -127,7 +138,50 @@ def evaluate(config_path: str | Path, checkpoint_path: str | Path | None = None,
             mask_np = target_mask_cpu[item_idx].numpy()
             generated[mask_np] = pred_cpu[item_idx].numpy()[mask_np]
             generated = ds.tokenizer.sanitize_for_export(generated, length=length)
-            if bool(constraints_cfg.get("use_constraint_reranking", False)):
+            use_constrained_beam = bool(constraints_cfg.get("use_constrained_beam_search", False)) or str(
+                constraints_cfg.get("decoder", "")
+            ) == "constrained_beam"
+            use_cih_constraint_decoder = bool(constraint_decoder_cfg.get("enabled", False)) and str(
+                constraint_decoder_cfg.get("backend", "beam")
+            ) == "beam"
+            if use_cih_constraint_decoder:
+                generated = apply_cih_constrained_beam_search(
+                    generated,
+                    decode_logits_cpu[item_idx],
+                    target_mask_cpu[item_idx].numpy(),
+                    ds.tokenizer,
+                    length=length,
+                    harmonic_labels=source_harmony,
+                    beam_size=int(constraint_decoder_cfg.get("beam_size", 8)),
+                    top_k=int(constraint_decoder_cfg.get("top_k", 12)),
+                    max_row_candidates=int(constraint_decoder_cfg.get("max_row_candidates", 96)),
+                    lambda_rule=float(constraint_decoder_cfg.get("lambda_rule", 1.0)),
+                    hard_constraints=list(constraint_decoder_cfg.get("hard_constraints", [])),
+                    soft_constraint_weights=dict(constraint_decoder_cfg.get("soft_constraint_weights", {})),
+                )
+            elif use_constrained_beam:
+                generated = apply_constrained_beam_search(
+                    generated,
+                    decode_logits_cpu[item_idx],
+                    target_mask_cpu[item_idx].numpy(),
+                    ds.tokenizer,
+                    length=length,
+                    harmonic_labels=source_harmony,
+                    beam_size=int(constraints_cfg.get("beam_size", 3)),
+                    top_k=int(constraints_cfg.get("beam_top_k", constraints_cfg.get("rerank_top_k", 3))),
+                    max_row_candidates=int(constraints_cfg.get("max_row_candidates", 32)),
+                    rule_weight=float(constraints_cfg.get("beam_rule_weight", constraints_cfg.get("rerank_rule_weight", 1.0))),
+                    harmony_weight=float(
+                        constraints_cfg.get("beam_harmony_weight", constraints_cfg.get("rerank_harmony_weight", 0.25))
+                    ),
+                    temporal_weight=float(
+                        constraints_cfg.get("beam_temporal_weight", constraints_cfg.get("rerank_temporal_weight", 1.0))
+                    ),
+                    seventh_weight=float(
+                        constraints_cfg.get("beam_seventh_weight", constraints_cfg.get("rerank_seventh_weight", 1.0))
+                    ),
+                )
+            elif bool(constraints_cfg.get("use_constraint_reranking", False)):
                 generated = apply_constraint_reranking(
                     generated,
                     decode_logits_cpu[item_idx],
@@ -241,21 +295,22 @@ def evaluate(config_path: str | Path, checkpoint_path: str | Path | None = None,
     }
     if output_path:
         write_json(metrics, output_path)
-    write_project1_outputs(
-        metrics,
-        rule_counts,
-        total_steps,
-        example_records,
-        harmony_summary={
-            "roman_known_total": roman_known_total,
-            "chord_known_total": chord_known_total,
-            "generated_roman_known_total": generated_roman_known_total,
-            "generated_chord_known_total": generated_chord_known_total,
-            "harmony_label_steps": harmony_label_steps,
-            "cadence_unknown_count": cadence_unknown_count,
-            "cadence_checks": cadence_checks,
-        },
-    )
+    if write_project_outputs:
+        write_project1_outputs(
+            metrics,
+            rule_counts,
+            total_steps,
+            example_records,
+            harmony_summary={
+                "roman_known_total": roman_known_total,
+                "chord_known_total": chord_known_total,
+                "generated_roman_known_total": generated_roman_known_total,
+                "generated_chord_known_total": generated_chord_known_total,
+                "harmony_label_steps": harmony_label_steps,
+                "cadence_unknown_count": cadence_unknown_count,
+                "cadence_checks": cadence_checks,
+            },
+        )
     return metrics
 
 
@@ -418,8 +473,9 @@ def main() -> None:
     parser.add_argument("--config", required=True)
     parser.add_argument("--checkpoint", default=None)
     parser.add_argument("--output", default=None)
+    parser.add_argument("--no-project1-outputs", action="store_true")
     args = parser.parse_args()
-    metrics = evaluate(args.config, args.checkpoint, args.output)
+    metrics = evaluate(args.config, args.checkpoint, args.output, write_project_outputs=not args.no_project1_outputs)
     print(metrics)
 
 

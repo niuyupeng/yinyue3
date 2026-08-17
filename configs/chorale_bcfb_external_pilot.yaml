@@ -1,0 +1,63 @@
+seed: 2026
+
+experiment:
+  label: bcfb_external_musicxml_source_pilot
+
+data:
+  external_xml_dir: data/raw/bcfb_selected_musicxml
+  processed_path: data/processed/chorale_bcfb_external_pilot.npz
+  max_chorales: 143
+  train_fraction: 0.8
+  val_fraction: 0.1
+  test_fraction: 0.1
+  grid_quarter_length: 0.25
+  min_midi: 36
+  max_midi: 84
+  max_seq_len: 128
+
+task:
+  name: soprano_to_satb
+  mask_prob: 0.45
+
+model:
+  type: transformer
+  hidden_size: 96
+  heads: 4
+  layers: 2
+  dropout: 0.1
+  max_seq_len: 128
+
+train:
+  epochs: 3
+  batch_size: 4
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  mixed_precision: true
+  early_stopping_patience: 3
+  num_workers: 0
+  fast_dev_batches:
+
+run:
+  name: bcfb_external_musicxml_pilot
+  output_dir: runs/bcfb_external_musicxml_pilot
+
+eval:
+  batch_size: 4
+  max_batches:
+  export_samples: 4
+
+constraints:
+  use_rule_guided_decoding: true
+  use_constraint_reranking: true
+  rerank_top_k: 4
+  rerank_rule_weight: 1.0
+  rerank_harmony_weight: 0.25
+  rerank_temporal_weight: 1.0
+  rerank_seventh_weight: 1.0
+
+decoding:
+  iterative_refinement: true
+  refinement_steps: 2
+  refinement_strategy: confidence
+  remask_fraction: 0.35

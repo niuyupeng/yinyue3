@@ -1,0 +1,14 @@
+{
+  "schema": "project1_expert_eval_packet_v1",
+  "generated_at_utc": "2026-07-07T06:24:42+00:00",
+  "packet_dir": "expert_eval/project1/sci_blind_protocol_packet",
+  "conditions": {
+    "ground_truth": 11,
+    "vanilla_transformer": 10,
+    "current_rule_guided_transformer": 20,
+    "cih_s2s_transformer": 2
+  },
+  "selected_scores": 4,
+  "render_pdfs": true,
+  "status": "protocol_packet_prepared_pending_completed_ratings"
+}

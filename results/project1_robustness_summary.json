@@ -1,0 +1,151 @@
+{
+  "schema": "project1_multiseed_robustness_v1",
+  "config_path": "configs\\chorale_rule_guided_decoding.yaml",
+  "config_sha256": "d6955886551923e3341c5a4ac3c1bd78565feb9554af0cd56932dbe1afc6be01",
+  "out_csv": "results\\project1_multiseed_summary.csv",
+  "out_json": "results\\project1_robustness_summary.json",
+  "seed_count": 3,
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "fast_dev_run": false,
+  "max_eval_batches": null,
+  "formal_robustness_evidence": true,
+  "formal_robustness_rule": "requires at least 3 distinct seeds, non-fast-dev training, full test evaluation, and at least 37 evaluated generations per seed",
+  "status": "formal robustness evidence",
+  "aggregates": {
+    "pitch_accuracy": {
+      "mean": 0.8229807298072981,
+      "std": 0.0012989425428246483,
+      "min": 0.8215603584607275,
+      "max": 0.8241082410824109
+    },
+    "cross_entropy": {
+      "mean": 0.6072547594706217,
+      "std": 0.01168726361282261,
+      "min": 0.5942193388938903,
+      "max": 0.6167974472045898
+    },
+    "rule_violations_per_100_timesteps": {
+      "mean": 3.654893691794061,
+      "std": 0.11958054462147427,
+      "min": 3.5450711649973643,
+      "max": 3.782287822878229
+    },
+    "parallel_fifths_per_100_timesteps": {
+      "mean": 0.008785802143735724,
+      "std": 0.015217455698197832,
+      "min": 0.0,
+      "max": 0.02635740643120717
+    },
+    "parallel_octaves_per_100_timesteps": {
+      "mean": 0.043929010718678614,
+      "std": 0.033165675783125764,
+      "min": 0.013178703215603585,
+      "max": 0.0790722192936215
+    },
+    "seventh_resolution_violation_rate": {
+      "mean": 0.00795115094008083,
+      "std": 0.0004026160336457425,
+      "min": 0.007511860832894043,
+      "max": 0.008302583025830259
+    },
+    "cadence_unknown_rate": {
+      "mean": 0.3873873873873874,
+      "std": 0.03120812265889869,
+      "min": 0.35135135135135137,
+      "max": 0.40540540540540543
+    },
+    "musicxml_export_success_rate": {
+      "mean": 1.0,
+      "std": 0.0,
+      "min": 1.0,
+      "max": 1.0
+    }
+  },
+  "rows": [
+    {
+      "seed": 2026,
+      "model": "proposed_neural_symbolic_rule_guided_enhanced",
+      "task": "soprano_to_satb",
+      "rule_guided_decoding": true,
+      "config_path": "configs\\chorale_rule_guided_decoding.yaml",
+      "run_dir": "runs\\chorale_rule_guided_decoding",
+      "checkpoint": "runs\\chorale_rule_guided_decoding\\best.pt",
+      "source": "existing_primary_metrics",
+      "fast_dev_run": false,
+      "best_epoch": 15,
+      "best_val_loss": 0.5106587290763855,
+      "device": "cuda",
+      "pitch_accuracy": 0.823273589878756,
+      "cross_entropy": 0.5942193388938903,
+      "soprano_accuracy": 0.0,
+      "alto_accuracy": 0.8318397469688983,
+      "tenor_accuracy": 0.812335266209805,
+      "bass_accuracy": 0.8256457564575646,
+      "rule_violations_per_100_timesteps": 3.782287822878229,
+      "parallel_fifths_per_100_timesteps": 0.0,
+      "parallel_octaves_per_100_timesteps": 0.0790722192936215,
+      "seventh_resolution_violation_rate": 0.008302583025830259,
+      "cadence_unknown_rate": 0.40540540540540543,
+      "musicxml_export_success_rate": 1.0,
+      "evaluated_generations": 37
+    },
+    {
+      "seed": 2027,
+      "model": "proposed_neural_symbolic_rule_guided_enhanced",
+      "task": "soprano_to_satb",
+      "rule_guided_decoding": true,
+      "config_path": "runs\\project1_multiseed\\seed_2027\\input_config.yaml",
+      "run_dir": "runs\\project1_multiseed\\seed_2027",
+      "checkpoint": "runs\\project1_multiseed\\seed_2027\\best.pt",
+      "source": "trained_multiseed",
+      "fast_dev_run": false,
+      "best_epoch": 16,
+      "best_val_loss": 0.5274831414222717,
+      "device": "cuda",
+      "pitch_accuracy": 0.8241082410824109,
+      "cross_entropy": 0.6167974472045898,
+      "soprano_accuracy": 0.0,
+      "alto_accuracy": 0.834870848708487,
+      "tenor_accuracy": 0.8111491829204006,
+      "bass_accuracy": 0.8263046916183447,
+      "rule_violations_per_100_timesteps": 3.6373220875065893,
+      "parallel_fifths_per_100_timesteps": 0.0,
+      "parallel_octaves_per_100_timesteps": 0.03953610964681075,
+      "seventh_resolution_violation_rate": 0.008039008961518187,
+      "cadence_unknown_rate": 0.35135135135135137,
+      "musicxml_export_success_rate": 1.0,
+      "evaluated_generations": 37
+    },
+    {
+      "seed": 2028,
+      "model": "proposed_neural_symbolic_rule_guided_enhanced",
+      "task": "soprano_to_satb",
+      "rule_guided_decoding": true,
+      "config_path": "runs\\project1_multiseed\\seed_2028\\input_config.yaml",
+      "run_dir": "runs\\project1_multiseed\\seed_2028",
+      "checkpoint": "runs\\project1_multiseed\\seed_2028\\best.pt",
+      "source": "trained_multiseed",
+      "fast_dev_run": false,
+      "best_epoch": 14,
+      "best_val_loss": 0.5251235723495483,
+      "device": "cuda",
+      "pitch_accuracy": 0.8215603584607275,
+      "cross_entropy": 0.610747492313385,
+      "soprano_accuracy": 0.0,
+      "alto_accuracy": 0.8324986821296785,
+      "tenor_accuracy": 0.8103584607274644,
+      "bass_accuracy": 0.8218239325250395,
+      "rule_violations_per_100_timesteps": 3.5450711649973643,
+      "parallel_fifths_per_100_timesteps": 0.02635740643120717,
+      "parallel_octaves_per_100_timesteps": 0.013178703215603585,
+      "seventh_resolution_violation_rate": 0.007511860832894043,
+      "cadence_unknown_rate": 0.40540540540540543,
+      "musicxml_export_success_rate": 1.0,
+      "evaluated_generations": 37
+    }
+  ]
+}

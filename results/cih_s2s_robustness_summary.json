@@ -1,0 +1,151 @@
+{
+  "schema": "project1_multiseed_robustness_v1",
+  "config_path": "configs\\cih_s2s_4060ti_16gb.yaml",
+  "config_sha256": "a218ebbb34c8aae1d48f1c114872da26c8312a75907b6341636327e3ab58731c",
+  "out_csv": "results\\cih_s2s_multiseed_summary.csv",
+  "out_json": "results\\cih_s2s_robustness_summary.json",
+  "seed_count": 3,
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "fast_dev_run": false,
+  "max_eval_batches": null,
+  "formal_robustness_evidence": true,
+  "formal_robustness_rule": "requires at least 3 distinct seeds, non-fast-dev training, full test evaluation, and at least 37 evaluated generations per seed",
+  "status": "formal robustness evidence",
+  "aggregates": {
+    "pitch_accuracy": {
+      "mean": 0.8305804486616295,
+      "std": 0.0031199907880488363,
+      "min": 0.8285011421542787,
+      "max": 0.8341679845369883
+    },
+    "cross_entropy": {
+      "mean": 0.5657975842555364,
+      "std": 0.01738179793249332,
+      "min": 0.5462471097707748,
+      "max": 0.5795048832893371
+    },
+    "rule_violations_per_100_timesteps": {
+      "mean": 14.470216130732737,
+      "std": 1.6439606921158516,
+      "min": 12.770163415919873,
+      "max": 16.051660516605168
+    },
+    "parallel_fifths_per_100_timesteps": {
+      "mean": 0.07467931822175365,
+      "std": 0.04989376511861073,
+      "min": 0.03953610964681075,
+      "max": 0.13178703215603585
+    },
+    "parallel_octaves_per_100_timesteps": {
+      "mean": 0.33825338253382536,
+      "std": 0.05326109494369241,
+      "min": 0.28993147074327885,
+      "max": 0.3953610964681075
+    },
+    "seventh_resolution_violation_rate": {
+      "mean": 0.009137234229485152,
+      "std": 0.0012456024318008986,
+      "min": 0.008170795993674223,
+      "max": 0.010542962572482868
+    },
+    "cadence_unknown_rate": {
+      "mean": 0.1981981981981982,
+      "std": 0.041284465720322884,
+      "min": 0.16216216216216217,
+      "max": 0.24324324324324326
+    },
+    "musicxml_export_success_rate": {
+      "mean": 1.0,
+      "std": 0.0,
+      "min": 1.0,
+      "max": 1.0
+    }
+  },
+  "rows": [
+    {
+      "seed": 2026,
+      "model": "cih_s2s_transformer_4060ti_16gb",
+      "task": "soprano_to_satb",
+      "rule_guided_decoding": false,
+      "config_path": "runs\\cih_s2s_formal_multiseed\\seed_2026\\input_config.yaml",
+      "run_dir": "runs\\cih_s2s_formal_multiseed\\seed_2026",
+      "checkpoint": "runs\\cih_s2s_formal_multiseed\\seed_2026\\best.pt",
+      "source": "trained_multiseed",
+      "fast_dev_run": false,
+      "best_epoch": 13,
+      "best_val_loss": 0.4964976817369461,
+      "device": "cuda",
+      "pitch_accuracy": 0.8285011421542787,
+      "cross_entropy": 0.5716407597064972,
+      "soprano_accuracy": 0.0,
+      "alto_accuracy": 0.8350026357406432,
+      "tenor_accuracy": 0.8166842382709542,
+      "bass_accuracy": 0.8338165524512388,
+      "rule_violations_per_100_timesteps": 12.770163415919873,
+      "parallel_fifths_per_100_timesteps": 0.13178703215603585,
+      "parallel_octaves_per_100_timesteps": 0.28993147074327885,
+      "seventh_resolution_violation_rate": 0.008697944122298365,
+      "cadence_unknown_rate": 0.24324324324324326,
+      "musicxml_export_success_rate": 1.0,
+      "evaluated_generations": 37
+    },
+    {
+      "seed": 2027,
+      "model": "cih_s2s_transformer_4060ti_16gb",
+      "task": "soprano_to_satb",
+      "rule_guided_decoding": false,
+      "config_path": "runs\\cih_s2s_formal_multiseed\\seed_2027\\input_config.yaml",
+      "run_dir": "runs\\cih_s2s_formal_multiseed\\seed_2027",
+      "checkpoint": "runs\\cih_s2s_formal_multiseed\\seed_2027\\best.pt",
+      "source": "trained_multiseed",
+      "fast_dev_run": false,
+      "best_epoch": 14,
+      "best_val_loss": 0.5045648038387298,
+      "device": "cuda",
+      "pitch_accuracy": 0.8290722192936215,
+      "cross_entropy": 0.5795048832893371,
+      "soprano_accuracy": 0.0,
+      "alto_accuracy": 0.8372430152872957,
+      "tenor_accuracy": 0.8153663679493938,
+      "bass_accuracy": 0.8346072746441751,
+      "rule_violations_per_100_timesteps": 16.051660516605168,
+      "parallel_fifths_per_100_timesteps": 0.05271481286241434,
+      "parallel_octaves_per_100_timesteps": 0.3294675803900896,
+      "seventh_resolution_violation_rate": 0.008170795993674223,
+      "cadence_unknown_rate": 0.16216216216216217,
+      "musicxml_export_success_rate": 1.0,
+      "evaluated_generations": 37
+    },
+    {
+      "seed": 2028,
+      "model": "cih_s2s_transformer_4060ti_16gb",
+      "task": "soprano_to_satb",
+      "rule_guided_decoding": false,
+      "config_path": "runs\\cih_s2s_formal_multiseed\\seed_2028\\input_config.yaml",
+      "run_dir": "runs\\cih_s2s_formal_multiseed\\seed_2028",
+      "checkpoint": "runs\\cih_s2s_formal_multiseed\\seed_2028\\best.pt",
+      "source": "trained_multiseed",
+      "fast_dev_run": false,
+      "best_epoch": 13,
+      "best_val_loss": 0.4860455721616745,
+      "device": "cuda",
+      "pitch_accuracy": 0.8341679845369883,
+      "cross_entropy": 0.5462471097707748,
+      "soprano_accuracy": 0.0,
+      "alto_accuracy": 0.8408012651555087,
+      "tenor_accuracy": 0.819847127042699,
+      "bass_accuracy": 0.841855561412757,
+      "rule_violations_per_100_timesteps": 14.588824459673168,
+      "parallel_fifths_per_100_timesteps": 0.03953610964681075,
+      "parallel_octaves_per_100_timesteps": 0.3953610964681075,
+      "seventh_resolution_violation_rate": 0.010542962572482868,
+      "cadence_unknown_rate": 0.1891891891891892,
+      "musicxml_export_success_rate": 1.0,
+      "evaluated_generations": 37
+    }
+  ]
+}

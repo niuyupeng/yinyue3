@@ -1,0 +1,33 @@
+{
+  "schema": "project1_dataset_summary_v1",
+  "generated_at_utc": "2026-07-07T11:18:15+00:00",
+  "config": "configs/chorale_main.yaml",
+  "processed_path": "data/processed/chorale_main.npz",
+  "grid_quarter_length": 0.25,
+  "max_seq_len": 256,
+  "voice_order": [
+    "soprano",
+    "alto",
+    "tenor",
+    "bass"
+  ],
+  "mask_strategy": {
+    "soprano_to_satb": "soprano known, alto/tenor/bass predicted",
+    "masked_infill": "Bernoulli token mask using task.mask_prob"
+  },
+  "status": "available",
+  "tokens_shape": [
+    371,
+    256,
+    4
+  ],
+  "split_counts": {
+    "test": 37,
+    "train": 297,
+    "val": 37
+  },
+  "encoded_scores": 371,
+  "grid_quarter_length_from_dataset": 0.25,
+  "max_seq_len_from_dataset": 256,
+  "vocab_size": 53
+}

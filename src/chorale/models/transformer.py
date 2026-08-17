@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import torch
 from torch import nn
+from torch.utils.checkpoint import checkpoint as activation_checkpoint
 
 
 class ChoraleTransformer(nn.Module):
@@ -158,6 +159,253 @@ class VoiceRelationMixer(nn.Module):
         gate = self.gate(torch.cat([flat, mixed], dim=-1))
         mixed = flat + gate * self.dropout(mixed)
         return mixed.reshape(batch, seq_len, voices, hidden)
+
+
+class HarmonicPlanEncoder(nn.Module):
+    """Measure-level harmonic plan encoder for score-to-score SATB modeling."""
+
+    def __init__(
+        self,
+        hidden_size: int,
+        heads: int,
+        layers: int = 2,
+        dropout: float = 0.1,
+        max_measure: int = 256,
+    ) -> None:
+        super().__init__()
+        self.hidden_size = int(hidden_size)
+        self.max_measure = int(max_measure)
+        self.key_embedding = nn.Embedding(12, hidden_size)
+        self.chord_root_embedding = nn.Embedding(13, hidden_size)
+        self.seventh_embedding = nn.Embedding(2, hidden_size)
+        self.dominant_embedding = nn.Embedding(2, hidden_size)
+        self.phrase_end_embedding = nn.Embedding(2, hidden_size)
+        self.chord_known_embedding = nn.Embedding(2, hidden_size)
+        self.roman_known_embedding = nn.Embedding(2, hidden_size)
+        self.measure_embedding = nn.Embedding(max_measure + 1, hidden_size)
+        layer = nn.TransformerEncoderLayer(
+            d_model=hidden_size,
+            nhead=heads,
+            dim_feedforward=hidden_size * 4,
+            dropout=dropout,
+            activation="gelu",
+            batch_first=True,
+            norm_first=True,
+        )
+        self.measure_encoder = nn.TransformerEncoder(layer, num_layers=max(1, int(layers)))
+        self.output_projection = nn.Linear(hidden_size * 2, hidden_size)
+        self.norm = nn.LayerNorm(hidden_size)
+
+    def forward(
+        self,
+        batch_size: int,
+        seq_len: int,
+        device: torch.device,
+        valid_mask: torch.Tensor | None = None,
+        measure_indices: torch.Tensor | None = None,
+        key_tonic_pc: torch.Tensor | None = None,
+        chord_roots: torch.Tensor | None = None,
+        is_seventh_chord: torch.Tensor | None = None,
+        is_dominant_function: torch.Tensor | None = None,
+        is_phrase_end: torch.Tensor | None = None,
+        chord_label_known: torch.Tensor | None = None,
+        roman_numeral_known: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        x = torch.zeros(batch_size, seq_len, self.hidden_size, device=device)
+        if measure_indices is None:
+            measure_ids = torch.zeros(batch_size, seq_len, dtype=torch.long, device=device)
+        else:
+            measure_ids = measure_indices.long().clamp(0, self.max_measure)
+        x = x + self.measure_embedding(measure_ids)
+        if key_tonic_pc is not None:
+            key_ids = key_tonic_pc.long().clamp(0, 11).view(batch_size, 1).expand(batch_size, seq_len)
+            x = x + self.key_embedding(key_ids)
+        if chord_roots is not None:
+            root_ids = chord_roots.long().clamp(-1, 11) + 1
+            x = x + self.chord_root_embedding(root_ids)
+        if is_seventh_chord is not None:
+            x = x + self.seventh_embedding(is_seventh_chord.long().clamp(0, 1))
+        if is_dominant_function is not None:
+            x = x + self.dominant_embedding(is_dominant_function.long().clamp(0, 1))
+        if is_phrase_end is not None:
+            x = x + self.phrase_end_embedding(is_phrase_end.long().clamp(0, 1))
+        if chord_label_known is not None:
+            x = x + self.chord_known_embedding(chord_label_known.long().clamp(0, 1))
+        if roman_numeral_known is not None:
+            x = x + self.roman_known_embedding(roman_numeral_known.long().clamp(0, 1))
+
+        if valid_mask is None:
+            step_mask = torch.ones(batch_size, seq_len, dtype=torch.bool, device=device)
+        else:
+            step_mask = valid_mask.any(dim=-1)
+        pooled = torch.zeros(batch_size, self.max_measure + 1, self.hidden_size, device=device)
+        counts = torch.zeros(batch_size, self.max_measure + 1, 1, device=device)
+        measure_index = measure_ids.unsqueeze(-1).expand(-1, -1, self.hidden_size)
+        pooled.scatter_add_(1, measure_index, x * step_mask.unsqueeze(-1).to(x.dtype))
+        counts.scatter_add_(1, measure_ids.unsqueeze(-1), step_mask.unsqueeze(-1).to(x.dtype))
+        pooled = pooled / counts.clamp_min(1.0)
+        bar_padding_mask = counts.squeeze(-1).eq(0)
+        encoded_bars = self.measure_encoder(pooled, src_key_padding_mask=bar_padding_mask)
+        gathered = encoded_bars.gather(1, measure_index)
+        return self.norm(self.output_projection(torch.cat([x, gathered], dim=-1)))
+
+
+class HierarchicalScoreTransformer(nn.Module):
+    """Constraint-integrated hierarchical score-to-score Transformer.
+
+    The model keeps the repository's existing SATB token interface while adding
+    a bar-level harmonic plan encoder and a plan-conditioned decoder stack. It
+    is intentionally small enough for local RTX 4060-class experiments.
+    """
+
+    def __init__(
+        self,
+        vocab_size: int,
+        hidden_size: int = 384,
+        local_layers: int = 2,
+        plan_layers: int = 2,
+        decoder_layers: int = 2,
+        heads: int = 6,
+        dropout: float = 0.1,
+        max_seq_len: int = 256,
+        max_measure: int = 256,
+        max_relative_distance: int = 64,
+        use_harmony_plan: bool = True,
+        use_voice_relation_attention: bool = True,
+        voice_relation_heads: int = 2,
+        use_gradient_checkpointing: bool = False,
+    ) -> None:
+        super().__init__()
+        self.vocab_size = int(vocab_size)
+        self.hidden_size = int(hidden_size)
+        self.max_seq_len = int(max_seq_len)
+        self.use_harmony_plan = bool(use_harmony_plan)
+        self.use_voice_relation_attention = bool(use_voice_relation_attention)
+        self.use_gradient_checkpointing = bool(use_gradient_checkpointing)
+
+        self.pitch_embedding = nn.Embedding(vocab_size, hidden_size)
+        self.voice_embedding = nn.Embedding(4, hidden_size)
+        self.known_embedding = nn.Embedding(2, hidden_size)
+        self.position_embedding = nn.Embedding(max_seq_len, hidden_size)
+        self.beat_embedding = nn.Embedding(32, hidden_size)
+        self.measure_embedding = nn.Embedding(max_measure + 1, hidden_size)
+        self.voice_relation = (
+            VoiceRelationMixer(hidden_size=hidden_size, heads=voice_relation_heads, dropout=dropout)
+            if self.use_voice_relation_attention
+            else nn.Identity()
+        )
+        self.input_projection = nn.Linear(hidden_size * 4, hidden_size)
+        self.local_blocks = nn.ModuleList(
+            [
+                RelativeTransformerBlock(
+                    hidden_size=hidden_size,
+                    heads=heads,
+                    dropout=dropout,
+                    max_relative_distance=max_relative_distance,
+                )
+                for _ in range(max(1, int(local_layers)))
+            ]
+        )
+        self.plan_encoder = (
+            HarmonicPlanEncoder(
+                hidden_size=hidden_size,
+                heads=heads,
+                layers=plan_layers,
+                dropout=dropout,
+                max_measure=max_measure,
+            )
+            if self.use_harmony_plan
+            else None
+        )
+        self.plan_gate = nn.Sequential(nn.Linear(hidden_size * 2, hidden_size), nn.Sigmoid())
+        self.decoder_blocks = nn.ModuleList(
+            [
+                RelativeTransformerBlock(
+                    hidden_size=hidden_size,
+                    heads=heads,
+                    dropout=dropout,
+                    max_relative_distance=max_relative_distance,
+                )
+                for _ in range(max(1, int(decoder_layers)))
+            ]
+        )
+        self.norm = nn.LayerNorm(hidden_size)
+        self.dropout = nn.Dropout(dropout)
+        self.voice_heads = nn.ModuleList([nn.Linear(hidden_size, vocab_size) for _ in range(4)])
+
+    def forward(
+        self,
+        input_tokens: torch.Tensor,
+        known_mask: torch.Tensor,
+        beat_positions: torch.Tensor | None = None,
+        measure_indices: torch.Tensor | None = None,
+        valid_mask: torch.Tensor | None = None,
+        key_tonic_pc: torch.Tensor | None = None,
+        chord_roots: torch.Tensor | None = None,
+        is_seventh_chord: torch.Tensor | None = None,
+        is_dominant_function: torch.Tensor | None = None,
+        is_phrase_end: torch.Tensor | None = None,
+        chord_label_known: torch.Tensor | None = None,
+        roman_numeral_known: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        batch, seq_len, voices = input_tokens.shape
+        if voices != 4:
+            raise ValueError("Expected four voices")
+
+        input_tokens = input_tokens.clamp(0, self.vocab_size - 1)
+        token_emb = self.pitch_embedding(input_tokens)
+        voice_ids = torch.arange(4, device=input_tokens.device).view(1, 1, 4)
+        voice_states = token_emb + self.voice_embedding(voice_ids) + self.known_embedding(known_mask.long().clamp(0, 1))
+        if self.use_voice_relation_attention:
+            voice_states = self.voice_relation(voice_states)
+        x = self.input_projection(voice_states.reshape(batch, seq_len, voices * self.hidden_size))
+
+        positions = torch.arange(seq_len, device=input_tokens.device).view(1, seq_len)
+        x = x + self.position_embedding(positions.clamp(0, self.max_seq_len - 1))
+        if beat_positions is not None:
+            x = x + self.beat_embedding(beat_positions.clamp(0, 31))
+        if measure_indices is not None:
+            x = x + self.measure_embedding(measure_indices.clamp(0, self.measure_embedding.num_embeddings - 1))
+
+        key_padding_mask = None
+        if valid_mask is not None:
+            key_padding_mask = ~valid_mask.any(dim=-1)
+        x = self.dropout(x)
+        for block in self.local_blocks:
+            x = self._run_block(block, x, key_padding_mask)
+
+        if self.plan_encoder is not None:
+            plan = self.plan_encoder(
+                batch_size=batch,
+                seq_len=seq_len,
+                device=input_tokens.device,
+                valid_mask=valid_mask,
+                measure_indices=measure_indices,
+                key_tonic_pc=key_tonic_pc,
+                chord_roots=chord_roots,
+                is_seventh_chord=is_seventh_chord,
+                is_dominant_function=is_dominant_function,
+                is_phrase_end=is_phrase_end,
+                chord_label_known=chord_label_known,
+                roman_numeral_known=roman_numeral_known,
+            )
+            gate = self.plan_gate(torch.cat([x, plan], dim=-1))
+            x = x + gate * plan
+
+        for block in self.decoder_blocks:
+            x = self._run_block(block, x, key_padding_mask)
+        x = self.norm(x)
+        return torch.stack([head(x) for head in self.voice_heads], dim=2)
+
+    def _run_block(
+        self,
+        block: RelativeTransformerBlock,
+        x: torch.Tensor,
+        key_padding_mask: torch.Tensor | None,
+    ) -> torch.Tensor:
+        if self.use_gradient_checkpointing and self.training and x.requires_grad:
+            return activation_checkpoint(lambda y: block(y, key_padding_mask=key_padding_mask), x, use_reentrant=False)
+        return block(x, key_padding_mask=key_padding_mask)
 
 
 class NeuralSymbolicChoraleTransformer(nn.Module):

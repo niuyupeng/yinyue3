@@ -31,6 +31,34 @@ def test_parser_returns_four_voices() -> None:
     assert [p.partName for p in parts] == ["Soprano", "Alto", "Tenor", "Bass"]
 
 
+def test_parser_prefers_generic_voice_parts_over_instruments() -> None:
+    score = stream.Score()
+    for part_name in ["Horn in G", "Timpani", "Flute"]:
+        part = stream.Part(id=part_name)
+        part.partName = part_name
+        n = note.Note("C4")
+        n.duration = duration.Duration(1.0)
+        part.append(n)
+        score.append(part)
+    for idx, pitch_name in enumerate(["C5", "G4", "E3", "C3"], start=1):
+        part = stream.Part(id=f"Voice{idx}")
+        part.partName = "Voice"
+        n = note.Note(pitch_name)
+        n.duration = duration.Duration(1.0)
+        part.append(n)
+        score.append(part)
+    continuo = stream.Part(id="Continuo")
+    continuo.partName = "Continuo"
+    continuo.append(note.Note("C2"))
+    score.append(continuo)
+
+    parts = extract_satb_parts(score)
+
+    assert [part.id for part in parts] == ["Voice1", "Voice2", "Voice3", "Voice4"]
+    encoded = ScoreTokenizer(max_seq_len=8).encode_score(score, name="orchestrated")
+    assert ScoreTokenizer(max_seq_len=8).token_to_midi(encoded["tokens"][0, 0]) == 72
+
+
 def test_tokenizer_roundtrip_tiny_satb() -> None:
     tokenizer = ScoreTokenizer(max_seq_len=32)
     encoded = tokenizer.encode_score(tiny_satb_score(), name="tiny")

@@ -1,15 +1,13 @@
-# Data
+# Data directory
 
-Default data source: built-in `music21` Bach chorales.
+The project uses score-level SATB data derived from the Bach chorales available through `music21` and optional external MusicXML/MXL pilot subsets.
 
-No external download is required for the smoke experiment. Optional external MusicXML input can be supplied through `data.external_xml_dir` in a config file.
+Raw upstream corpora are not copied into this curated repository. Use the dataset-building scripts and corresponding configuration files after reviewing the original source terms.
 
-Processed datasets are written to `data/processed/*.npz` and contain:
+The data interface is a fixed-grid tensor with voice order:
 
-- `tokens`: padded SATB token arrays of shape `(N, T, 4)`
-- `lengths`: unpadded sequence lengths
-- `splits`: deterministic train/val/test labels
-- `names`: source names
-- tokenizer metadata such as grid size and MIDI range
+```text
+soprano, alto, tenor, bass
+```
 
-Raw external MusicXML files, if used, can be placed in `data/raw/`.
+The default grid is `quarterLength = 0.25`. MIDI numbers are internal symbolic pitch tokens; the intended research output is four-part MusicXML notation.

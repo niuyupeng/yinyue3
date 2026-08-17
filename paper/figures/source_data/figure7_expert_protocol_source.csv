@@ -1,0 +1,13 @@
+claim_boundary,count,figure,label,row_type,source_file,status
+protocol only; no expert rating result,11,Figure 7,ground_truth,condition,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,blank_rating_form_only_pending_completed_ratings
+protocol only; no expert rating result,10,Figure 7,vanilla_transformer,condition,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,blank_rating_form_only_pending_completed_ratings
+protocol only; no expert rating result,20,Figure 7,current_rule_guided_transformer,condition,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,blank_rating_form_only_pending_completed_ratings
+protocol only; no expert rating result,2,Figure 7,cih_s2s_transformer,condition,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,blank_rating_form_only_pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,harmonic correctness,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,voice leading correctness,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,seventh resolution correctness,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,cadence quality,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,singability,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,stylistic consistency,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,usefulness for composition pedagogy,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings
+protocol dimension only; no expert mean or CI,,Figure 7,overall preference,rating_dimension,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,pending_completed_ratings

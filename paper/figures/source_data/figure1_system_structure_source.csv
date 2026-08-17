@@ -1,0 +1,7 @@
+claim_boundary,evidence_summary,figure,panel,seed_count,source_file,step,step_index
+system schematic; no performance claim,"SATB tensor [371, 256, 4]",Figure 1,system,not applicable,results/experiment_dataset_summary.json,Partial score,1
+system schematic; no performance claim,grid=0.25; vocab=53,Figure 1,system,not applicable,results/experiment_dataset_summary.json,Tokenizer,2
+system schematic; no performance claim,"key, beat, measure, phrase and harmonic-label inputs",Figure 1,system,not applicable,results/experiment_matrix.csv,Harmonic plan encoder,3
+system schematic; no performance claim,completed_multiseed,Figure 1,system,not applicable,results/experiment_matrix.csv,Hierarchical SATB decoder,4
+system schematic; no performance claim,constrained_beam,Figure 1,system,not applicable,results/constraint_decoder_analysis_summary.json,Constrained decoding,5
+system schematic; no performance claim,expert packet status: blank_rating_form_only_pending_completed_ratings,Figure 1,system,not applicable,expert_eval/project1/sci_blind_protocol_packet/rating_form.csv,MusicXML + rule report,6

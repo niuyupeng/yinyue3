@@ -253,30 +253,63 @@ def plot_metric_summary(rows: list[dict[str, str]], output_path: Path, plt, rule
 
     row_by_model = preferred_metric_map(rows)
     primary = [(model, label, row_by_model[model]) for model, label in PRIMARY_MODEL_ORDER if model in row_by_model]
-    fig = plt.figure(figsize=(7.1, 4.45), constrained_layout=True)
-    gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 1.0], height_ratios=[1.0, 1.0])
-    ax_a = fig.add_subplot(gs[0, 0])
-    ax_b = fig.add_subplot(gs[0, 1])
-    ax_c = fig.add_subplot(gs[1, 0])
-    ax_d = fig.add_subplot(gs[1, 1])
+    fig = plt.figure(figsize=(7.1, 4.15), constrained_layout=True)
+    gs = fig.add_gridspec(
+        2,
+        3,
+        width_ratios=[1.18, 0.98, 0.98],
+        height_ratios=[1.0, 1.0],
+    )
+    ax_a = fig.add_subplot(gs[:, 0])
+    ax_b = fig.add_subplot(gs[0, 1:])
+    ax_c = fig.add_subplot(gs[1, 1:])
 
     for model, label, row in primary:
         x_val = float_or_zero(row.get("cross_entropy"))
         y_val = float_or_zero(row.get("pitch_accuracy"))
-        size = 68 if label == "Proposed" else 44
+        size = 86 if label == "Proposed" else 48
         ax_a.scatter(x_val, y_val, s=size, color=PALETTE[label], edgecolor="#272727", linewidth=0.5, zorder=3)
         dx, dy = {
-            "LSTM": (0.010, 0.0015),
-            "Vanilla": (0.010, -0.004),
-            "Proposed": (-0.070, 0.0015),
+            "LSTM": (0.012, 0.0015),
+            "Vanilla": (0.012, -0.0035),
+            "Proposed": (-0.087, 0.0018),
         }.get(label, (0.008, 0.001))
-        ax_a.text(x_val + dx, y_val + dy, label, fontsize=6.3, va="center")
-    ax_a.set_xlim(0.52, 0.93)
+        ax_a.text(x_val + dx, y_val + dy, label, fontsize=6.2, va="center")
+    vanilla = row_by_model.get("transformer_no_constraints", {})
+    proposed = row_by_model.get("proposed_neural_symbolic_rule_guided", {})
+    if vanilla and proposed:
+        vanilla_ce = float_or_zero(vanilla.get("cross_entropy"))
+        vanilla_acc = float_or_zero(vanilla.get("pitch_accuracy"))
+        proposed_ce = float_or_zero(proposed.get("cross_entropy"))
+        proposed_acc = float_or_zero(proposed.get("pitch_accuracy"))
+        ax_a.annotate(
+            "",
+            xy=(proposed_ce, proposed_acc),
+            xytext=(vanilla_ce, vanilla_acc),
+            arrowprops={
+                "arrowstyle": "->",
+                "lw": 0.9,
+                "color": "#272727",
+                "shrinkA": 7,
+                "shrinkB": 8,
+            },
+            zorder=2,
+        )
+        ax_a.text(
+            0.668,
+            0.807,
+            f"{(proposed_acc - vanilla_acc) * 100:+.1f} pp acc.\n{proposed_ce - vanilla_ce:+.3f} CE",
+            fontsize=5.8,
+            color="#272727",
+            ha="left",
+            va="center",
+        )
+    ax_a.set_xlim(0.55, 0.91)
     ax_a.set_ylim(0.755, 0.835)
     ax_a.set_xlabel("Cross entropy (lower is better)")
     ax_a.set_ylabel("Pitch accuracy")
     ax_a.grid(alpha=0.18, linewidth=0.5)
-    ax_a.set_title("Prediction trade-off", loc="left", fontsize=7, pad=3)
+    ax_a.set_title("Primary held-out comparison", loc="left", fontsize=7, pad=3)
 
     ablation_models = [
         ("proposed_neural_symbolic_rule_guided", "Full"),
@@ -307,40 +340,16 @@ def plot_metric_summary(rows: list[dict[str, str]], output_path: Path, plt, rule
     ax_b.grid(axis="x", alpha=0.18, linewidth=0.5)
     ax_b.set_title("Ablation penalty", loc="left", fontsize=7, pad=3)
     for yi, d_ce, d_acc in zip(y, ce_delta, acc_delta_pp):
-        ax_b.text(d_ce + 0.006, yi, f"{d_ce:+.3f} CE; {d_acc:+.2f} pp acc.", va="center", fontsize=5.8)
-
-    vanilla = row_by_model.get("transformer_no_constraints", {})
-    proposed = row_by_model.get("proposed_neural_symbolic_rule_guided", {})
-    targeted = [
-        ("Parallel fifths", "parallel_fifths_per_100_timesteps"),
-        ("Crossing", "voice_crossing_rate"),
-        ("Spacing", "spacing_violation_rate"),
-        ("Seventh resolution", "seventh_resolution_violation_rate"),
-    ]
-    names, changes = [], []
-    for name, key in targeted:
-        base = float_or_zero(vanilla.get(key))
-        new = float_or_zero(proposed.get(key))
-        change = 0.0 if base == 0 else 100.0 * (new - base) / base
-        names.append(name)
-        changes.append(change)
-    yy = np.arange(len(names))
-    ax_c.axvline(0, color="#272727", linewidth=0.7)
-    ax_c.barh(yy, changes, color=[DELTA_COLORS["improved"] if v < 0 else DELTA_COLORS["worse"] for v in changes], edgecolor="#272727", linewidth=0.35)
-    ax_c.set_yticks(yy)
-    ax_c.set_yticklabels(names)
-    ax_c.invert_yaxis()
-    ax_c.set_xlabel("Change vs vanilla, fewer is better (%)")
-    ax_c.set_xlim(-100, 80)
-    ax_c.grid(axis="x", alpha=0.18, linewidth=0.5)
-    ax_c.set_title("Targeted rule changes", loc="left", fontsize=7, pad=3)
-    for yi, value in zip(yy, changes):
-        text_x, align = bar_label_position(value)
-        ax_c.text(text_x, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=6)
+        text_x = d_ce + 0.006 if d_ce >= 0 else 0.006
+        ax_b.text(text_x, yi, f"{d_ce:+.3f} CE; {d_acc:+.2f} pp acc.", va="center", fontsize=5.8)
 
     tradeoffs = [
-        ("Total violations", "rule_violations_per_100_timesteps"),
+        ("All rule flags", "rule_violations_per_100_timesteps"),
+        ("Parallel fifths", "parallel_fifths_per_100_timesteps"),
         ("Parallel octaves", "parallel_octaves_per_100_timesteps"),
+        ("Voice crossing", "voice_crossing_rate"),
+        ("Spacing", "spacing_violation_rate"),
+        ("Seventh resolution", "seventh_resolution_violation_rate"),
         ("Leading tone", None),
     ]
     rule_rows = [row for row in read_csv(rule_csv) if not is_smoke_row(row)]
@@ -357,20 +366,20 @@ def plot_metric_summary(rows: list[dict[str, str]], output_path: Path, plt, rule
         trade_names.append(name)
         trade_changes.append(change)
     yy = np.arange(len(trade_names))
-    ax_d.axvline(0, color="#272727", linewidth=0.7)
-    ax_d.barh(yy, trade_changes, color=[DELTA_COLORS["improved"] if v < 0 else DELTA_COLORS["worse"] for v in trade_changes], edgecolor="#272727", linewidth=0.35)
-    ax_d.set_yticks(yy)
-    ax_d.set_yticklabels(trade_names)
-    ax_d.invert_yaxis()
-    ax_d.set_xlim(-100, 80)
-    ax_d.set_xlabel("Change vs vanilla, fewer is better (%)")
-    ax_d.grid(axis="x", alpha=0.18, linewidth=0.5)
-    ax_d.set_title("Additional rule changes", loc="left", fontsize=7, pad=3)
+    ax_c.axvline(0, color="#272727", linewidth=0.7)
+    ax_c.barh(yy, trade_changes, color=[DELTA_COLORS["improved"] if v < 0 else DELTA_COLORS["worse"] for v in trade_changes], edgecolor="#272727", linewidth=0.35)
+    ax_c.set_yticks(yy)
+    ax_c.set_yticklabels(trade_names)
+    ax_c.invert_yaxis()
+    ax_c.set_xlim(-105, 45)
+    ax_c.set_xlabel("Proposed vs vanilla, fewer is better (%)")
+    ax_c.grid(axis="x", alpha=0.18, linewidth=0.5)
+    ax_c.set_title("Automatic rule-diagnostic change", loc="left", fontsize=7, pad=3)
     for yi, value in zip(yy, trade_changes):
         text_x, align = bar_label_position(value)
-        ax_d.text(text_x, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=6)
+        ax_c.text(text_x, yi, f"{value:+.0f}%", va="center", ha=align, fontsize=5.8)
 
-    for panel, ax in zip("abcd", [ax_a, ax_b, ax_c, ax_d]):
+    for panel, ax in zip("abc", [ax_a, ax_b, ax_c]):
         add_panel_label(ax, panel)
     save_all_formats(fig, output_path, plt)
     plt.close(fig)
@@ -530,30 +539,76 @@ def make_method_figure(output_path: str | Path) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     apply_publication_style(plt)
     labels = [
-        "Soprano, bass\nor Roman plan",
-        "Score\ntokenizer",
-        "Neural-symbolic\nTransformer",
-        "Rule-guided\ndecoding",
-        "SATB MusicXML\nand report",
+        ("Partial SATB context", "soprano, bass,\nor masked score"),
+        ("Score tokenizer", "voice, beat,\nmeasure, mask"),
+        ("Neural-symbolic\nTransformer", "relative attention\n+ harmonic context"),
+        ("Rule-guided decoding", "local repair\n+ diagnostics"),
+        ("SATB MusicXML", "score export\n+ rule report"),
     ]
-    fig, ax = plt.subplots(figsize=(7.1, 1.8))
+    fig, ax = plt.subplots(figsize=(7.1, 2.25))
     ax.set_axis_off()
-    xs = [0.11, 0.30, 0.50, 0.70, 0.89]
+    xs = [0.10, 0.30, 0.50, 0.70, 0.90]
     fills = ["#F7F7F7", "#E8EEF8", "#DCE7F3", "#EAF4EA", "#F7F7F7"]
-    for x, label, fill in zip(xs, labels, fills):
+    ax.text(
+        0.02,
+        0.92,
+        "Score-level SATB harmonization and explanation",
+        ha="left",
+        va="center",
+        fontsize=8,
+        fontweight="bold",
+        color="#272727",
+    )
+    for x, (title, detail), fill in zip(xs, labels, fills):
         box = FancyBboxPatch(
-            (x - 0.074, 0.34),
-            0.148,
-            0.34,
-            boxstyle="round,pad=0.018,rounding_size=0.018",
+            (x - 0.078, 0.48),
+            0.156,
+            0.29,
+            boxstyle="round,pad=0.018,rounding_size=0.012",
             linewidth=0.8,
             facecolor=fill,
             edgecolor="#272727",
         )
         ax.add_patch(box)
-        ax.text(x, 0.51, label, ha="center", va="center", fontsize=7)
+        ax.text(x, 0.665, title, ha="center", va="center", fontsize=6.9, fontweight="bold")
+        ax.text(x, 0.555, detail, ha="center", va="center", fontsize=5.8, color="#4D4D4D")
     for x0, x1 in zip(xs[:-1], xs[1:]):
-        ax.add_patch(FancyArrowPatch((x0 + 0.083, 0.51), (x1 - 0.083, 0.51), arrowstyle="->", mutation_scale=9, linewidth=0.8, color="#272727"))
+        ax.add_patch(
+            FancyArrowPatch(
+                (x0 + 0.084, 0.625),
+                (x1 - 0.084, 0.625),
+                arrowstyle="->",
+                mutation_scale=9,
+                linewidth=0.8,
+                color="#272727",
+            )
+        )
+    callouts = [
+        (0.295, "Automatic harmonic labels", "key, chord, RN, seventh,\ndominant and phrase-end flags"),
+        (0.705, "Inspectable rule layer", "range, crossing, spacing,\nP5/P8, sevenths, cadence evidence"),
+    ]
+    for x, title, detail in callouts:
+        box = FancyBboxPatch(
+            (x - 0.18, 0.14),
+            0.36,
+            0.20,
+            boxstyle="round,pad=0.014,rounding_size=0.010",
+            linewidth=0.65,
+            facecolor="#FFFFFF",
+            edgecolor="#767676",
+        )
+        ax.add_patch(box)
+        ax.text(x, 0.275, title, ha="center", va="center", fontsize=6.4, fontweight="bold")
+        ax.text(x, 0.205, detail, ha="center", va="center", fontsize=5.6, color="#4D4D4D")
+    ax.text(
+        0.50,
+        0.060,
+        "Uncertain Roman-numeral or chord labels are stored as UNKNOWN and are not used as ground truth.",
+        ha="center",
+        va="center",
+        fontsize=5.6,
+        color="#4D4D4D",
+    )
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     save_all_formats(fig, output_path, plt)
@@ -686,7 +741,7 @@ def write_source_data(output_dir: Path, metrics_rows: list[dict[str, str]], rule
         for row in metric_source_rows:
             out = base_source_row(
                 figure="project1_metrics_summary",
-                panel="a-d",
+                panel="a-c",
                 source_file="results/project1_metrics.csv",
                 generated_at=generated_at,
                 software=software,
@@ -935,14 +990,15 @@ def write_qa_note(path: Path) -> None:
                 "# Project 1 Figure QA Note",
                 "",
                 "Backend: Python/matplotlib only.",
-                "Figure archetypes: quantitative grid for result summaries; schematic-led workflow for the method figure.",
+                "Figure archetypes: asymmetric quantitative evidence figure for the main summary; schematic-led workflow for the method figure.",
                 "Core conclusion: the proposed model improves pitch prediction and selected rule diagnostics, but it does not solve all common-practice constraints.",
                 "Source data: see paper/figures/source_data/*.csv.",
                 "Exports: PNG preview, PDF, SVG with editable text, and TIFF at 600 dpi when supported by the local Matplotlib/Pillow stack.",
                 "Integrity note: all plotted values are read from results/project1_metrics.csv, results/project1_rule_violations.csv, or selected runs/*/metrics.csv. Smoke rows are excluded from final figures.",
-                "Statistics note: the figures report one logged seed and do not show confidence intervals or significance tests.",
+                "Statistics note: the main figures report one logged seed and do not show confidence intervals or significance tests; the separate multi-seed table reports proposed-model variability across seeds 2026, 2027, and 2028.",
                 "Training-curve note: only selected comparable training histories are plotted; other run logs are listed in source_data/project1_training_curve_exclusions.csv.",
                 "Rule denominator note: legacy CSV columns say per_100_timesteps; figure labels use per 100 score positions for score-level clarity.",
+                "Boundary note: expert preference, singability, cadence quality, and pedagogical usefulness remain pending human-evaluation endpoints.",
             ]
         )
         + "\n",

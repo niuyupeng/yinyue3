@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="526.791954pt" height="141.59952pt" viewBox="0 0 526.791954 141.59952" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-07T19:18:16.557036</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 141.59952 
+L 526.791954 141.59952 
+L 526.791954 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="text_1">
+    <g id="patch_2">
+     <path d="M 18.64662 76.212391 
+L 63.670058 76.212391 
+Q 66.520058 76.212391 66.520058 73.362391 
+L 66.520058 66.323817 
+Q 66.520058 63.473817 63.670058 63.473817 
+L 18.64662 63.473817 
+Q 15.79662 63.473817 15.79662 66.323817 
+L 15.79662 73.362391 
+Q 15.79662 76.212391 18.64662 76.212391 
+z
+" style="fill: #f4f6f8; stroke: #6d7a86; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="41.158339" y="71.784022" transform="rotate(-0 41.158339 71.784022)">Partial score</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #49515a" x="41.158339" y="114.772942" transform="rotate(-0 41.158339 114.772942)">SATB tensor [371, 256, 4]</text>
+   </g>
+   <g id="patch_3">
+    <path d="M 79.546233 69.843104 
+Q 79.970259 69.843104 79.164448 69.843104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 76.364448 68.443104 
+L 79.164448 69.843104 
+L 76.364448 71.243104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_3">
+    <g id="patch_4">
+     <path d="M 101.552009 76.212391 
+L 136.00279 76.212391 
+Q 138.85279 76.212391 138.85279 73.362391 
+L 138.85279 66.323817 
+Q 138.85279 63.473817 136.00279 63.473817 
+L 101.552009 63.473817 
+Q 98.702009 63.473817 98.702009 66.323817 
+L 98.702009 73.362391 
+Q 98.702009 76.212391 101.552009 76.212391 
+z
+" style="fill: #f4f6f8; stroke: #6d7a86; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="118.7774" y="71.784022" transform="rotate(-0 118.7774 71.784022)">Tokenizer</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #49515a" x="118.7774" y="114.772886" transform="rotate(-0 118.7774 114.772886)">grid=0.25; vocab=53</text>
+   </g>
+   <g id="patch_5">
+    <path d="M 157.165293 69.843104 
+Q 160.012733 69.843104 161.630335 69.843104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 158.830335 68.443104 
+L 161.630335 69.843104 
+L 158.830335 71.243104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_5">
+    <g id="patch_6">
+     <path d="M 175.202144 80.855946 
+L 227.293159 80.855946 
+Q 230.143159 80.855946 230.143159 78.005946 
+L 230.143159 61.680263 
+Q 230.143159 58.830263 227.293159 58.830263 
+L 175.202144 58.830263 
+Q 172.352144 58.830263 172.352144 61.680263 
+L 172.352144 78.005946 
+Q 172.352144 80.855946 175.202144 80.855946 
+z
+" style="fill: #f4f6f8; stroke: #6d7a86; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(175.202144 67.702601)">Harmonic plan</text>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(186.660737 75.865443)">encoder</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #49515a" transform="translate(160.68073 111.616587)">key, beat, measure, phrase and</text>
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #49515a" transform="translate(173.685417 117.929298)">harmonic-label inputs</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 239.631992 69.843104 
+Q 244.907939 69.843104 248.954049 69.843104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 246.154049 68.443104 
+L 248.954049 69.843104 
+L 246.154049 71.243104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <g id="patch_8">
+     <path d="M 256.127493 80.855946 
+L 321.010696 80.855946 
+Q 323.860696 80.855946 323.860696 78.005946 
+L 323.860696 61.680263 
+Q 323.860696 58.830263 321.010696 58.830263 
+L 256.127493 58.830263 
+Q 253.277493 58.830263 253.277493 61.680263 
+L 253.277493 78.005946 
+Q 253.277493 80.855946 256.127493 80.855946 
+z
+" style="fill: #f4f6f8; stroke: #6d7a86; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(256.127493 67.702601)">Hierarchical SATB</text>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(273.982181 75.865443)">decoder</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #49515a" x="288.569095" y="114.772942" transform="rotate(-0 288.569095 114.772942)">completed_multiseed</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 326.956988 69.843104 
+Q 329.804428 69.843104 331.42203 69.843104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 328.62203 68.443104 
+L 331.42203 69.843104 
+L 328.62203 71.243104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_9">
+    <g id="patch_10">
+     <path d="M 349.16337 80.856019 
+L 392.915323 80.856019 
+Q 395.765323 80.856019 395.765323 78.006019 
+L 395.765323 61.680189 
+Q 395.765323 58.830189 392.915323 58.830189 
+L 349.16337 58.830189 
+Q 346.31337 58.830189 346.31337 61.680189 
+L 346.31337 78.006019 
+Q 346.31337 80.856019 349.16337 80.856019 
+z
+" style="fill: #f4f6f8; stroke: #6d7a86; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(349.16337 67.702528)">Constrained</text>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(354.374698 75.86537)">decoding</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #49515a" x="371.039347" y="114.772942" transform="rotate(-0 371.039347 114.772942)">constrained_beam</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 409.42724 69.843104 
+Q 409.851266 69.843104 409.045455 69.843104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 406.245455 68.443104 
+L 409.045455 69.843104 
+L 406.245455 71.243104 
+" style="fill: none; stroke: #3d4852; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_11">
+    <g id="patch_12">
+     <path d="M 419.033407 80.855946 
+L 478.283407 80.855946 
+Q 481.133407 80.855946 481.133407 78.005946 
+L 481.133407 61.680263 
+Q 481.133407 58.830263 478.283407 58.830263 
+L 419.033407 58.830263 
+Q 416.183407 58.830263 416.183407 61.680263 
+L 416.183407 78.005946 
+Q 416.183407 80.855946 419.033407 80.855946 
+z
+" style="fill: #f4f6f8; stroke: #6d7a86; stroke-width: 0.8; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(419.033407 67.702601)">MusicXML + rule</text>
+    <text style="font-weight: 700; font-size: 7.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(437.824423 75.865443)">report</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #49515a" transform="translate(421.901829 111.616587)">expert packet status:</text>
+    <text style="font-size: 5.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #49515a" transform="translate(377.72486 117.929185)">protocol_packet_prepared_pending_completed_ratings</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="7.2" y="13.024219" transform="rotate(-0 7.2 13.024219)">Constraint-integrated score-to-score SATB harmonization workflow</text>
+   </g>
+  </g>
+ </g>
+</svg>

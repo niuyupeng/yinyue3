@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 from pathlib import Path
 
 from chorale.utils import ensure_dir
@@ -186,12 +187,14 @@ def build_project1_tables_from_csv(
     rule_csv: str | Path = "results/project1_rule_violations.csv",
     harmony_csv: str | Path = "results/project1_harmony_labels_summary.csv",
     expert_summary_csv: str | Path = "results/project1_expert_eval_summary.csv",
+    robustness_json: str | Path = "results/project1_robustness_summary.json",
 ) -> dict[str, str]:
     output_dir = ensure_dir(output_dir)
     metric_rows = read_rows(Path(metrics_csv))
     rule_rows = read_rows(Path(rule_csv))
     harmony_rows = read_rows(Path(harmony_csv))
     expert_rows = read_rows(Path(expert_summary_csv))
+    robustness_summary = read_json(Path(robustness_json))
 
     final_metric_rows = [row for row in metric_rows if not is_smoke_row(row)]
     expected_rows = expected_table_rows(final_metric_rows)
@@ -228,6 +231,11 @@ def build_project1_tables_from_csv(
         paths["expert_eval"] = write_expert_results_table(output_dir / "project1_expert_eval_results.tex", expert_rows)
     else:
         paths["expert_eval_template"] = write_expert_template_table(output_dir / "project1_expert_eval_template.tex")
+    if robustness_summary:
+        paths["multiseed_robustness"] = write_multiseed_robustness_table(
+            output_dir / "project1_multiseed_robustness.tex",
+            robustness_summary,
+        )
     return paths
 
 
@@ -236,6 +244,13 @@ def read_rows(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
+
+
+def read_json(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    with path.open("r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def expected_table_rows(metric_rows: list[dict[str, str]], expected_experiments: list[dict[str, object]] | None = None) -> list[dict[str, str]]:
@@ -467,6 +482,48 @@ def write_expert_template_table(path: Path) -> str:
     return str(path)
 
 
+def write_multiseed_robustness_table(path: Path, summary: dict) -> str:
+    aggregates = summary.get("aggregates", {})
+    rows = []
+    for key, label in [
+        ("pitch_accuracy", "Pitch accuracy"),
+        ("cross_entropy", "Cross entropy"),
+        ("rule_violations_per_100_timesteps", "Rule flags/100 positions"),
+        ("parallel_fifths_per_100_timesteps", "Parallel fifths/100 positions"),
+        ("parallel_octaves_per_100_timesteps", "Parallel octaves/100 positions"),
+        ("seventh_resolution_violation_rate", "Seventh-resolution violation rate"),
+        ("cadence_unknown_rate", "Cadence unknown rate"),
+        ("musicxml_export_success_rate", "MusicXML export success"),
+    ]:
+        item = aggregates.get(key, {})
+        rows.append(
+            {
+                "metric": label,
+                "mean": item.get("mean"),
+                "std": item.get("std"),
+                "min": item.get("min"),
+                "max": item.get("max"),
+                "n": f"{summary.get('seed_count')} seeds",
+            }
+        )
+    seeds = ", ".join(str(seed) for seed in summary.get("seeds", []))
+    caption = (
+        "Same-corpus multi-seed robustness summary for the proposed rule-guided Transformer "
+        f"using seeds {seeds}. This table reports variation across seeds on the same Bach chorale test split; "
+        "it is not external-corpus evidence."
+    )
+    columns = [
+        ("metric", "Metric"),
+        ("mean", "Mean"),
+        ("std", "SD"),
+        ("min", "Min"),
+        ("max", "Max"),
+        ("n", "Seeds"),
+    ]
+    path.write_text(latex_table(rows, columns, caption), encoding="utf-8")
+    return str(path)
+
+
 def latex_table(rows: list[dict[str, str]], columns: list[tuple[str, str]], caption: str) -> str:
     alignment = "l" * len(columns)
     use_resize = len(columns) > 6
@@ -535,8 +592,16 @@ def main() -> None:
     parser.add_argument("--rule-csv", default="results/project1_rule_violations.csv")
     parser.add_argument("--harmony-csv", default="results/project1_harmony_labels_summary.csv")
     parser.add_argument("--expert-summary-csv", default="results/project1_expert_eval_summary.csv")
+    parser.add_argument("--robustness-json", default="results/project1_robustness_summary.json")
     args = parser.parse_args()
-    paths = build_project1_tables_from_csv(args.metrics_csv, args.output_dir, args.rule_csv, args.harmony_csv, args.expert_summary_csv)
+    paths = build_project1_tables_from_csv(
+        args.metrics_csv,
+        args.output_dir,
+        args.rule_csv,
+        args.harmony_csv,
+        args.expert_summary_csv,
+        args.robustness_json,
+    )
     print(paths)
 
 
