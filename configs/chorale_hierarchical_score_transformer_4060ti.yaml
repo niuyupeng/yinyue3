@@ -1,0 +1,71 @@
+seed: 2026
+run:
+  name: chorale_hierarchical_score_transformer_4060ti
+  output_dir: runs/chorale_hierarchical_score_transformer_4060ti
+experiment:
+  label: constraint_integrated_hierarchical_score_transformer_4060ti
+data:
+  processed_path: data/processed/chorale_main.npz
+  external_xml_dir:
+  max_chorales:
+  harmonic_labels: true
+  grid_quarter_length: 0.25
+  max_seq_len: 256
+  train_fraction: 0.8
+  val_fraction: 0.1
+  test_fraction: 0.1
+  min_midi: 36
+  max_midi: 84
+task:
+  name: soprano_to_satb
+  mask_prob: 0.45
+model:
+  type: hierarchical_score_transformer
+  hidden_size: 384
+  local_layers: 2
+  plan_layers: 2
+  decoder_layers: 3
+  heads: 6
+  dropout: 0.1
+  max_seq_len: 256
+  max_measure: 256
+  max_relative_distance: 64
+  use_harmony_plan: true
+  use_voice_relation_attention: true
+  voice_relation_heads: 2
+  use_gradient_checkpointing: true
+train:
+  epochs: 60
+  batch_size: 4
+  learning_rate: 0.00025
+  weight_decay: 0.01
+  gradient_clip: 1.0
+  gradient_accumulation: 2
+  mixed_precision: true
+  early_stopping_patience: 12
+  num_workers: 0
+  fast_dev_batches:
+eval:
+  batch_size: 4
+  max_batches:
+  export_samples: 10
+constraints:
+  use_rule_guided_decoding: true
+  use_constrained_beam_search: true
+  decoder: constrained_beam
+  beam_size: 3
+  beam_top_k: 3
+  max_row_candidates: 24
+  beam_rule_weight: 0.8
+  beam_harmony_weight: 0.2
+  beam_temporal_weight: 2.5
+  beam_seventh_weight: 2.0
+decoding:
+  iterative_refinement: true
+  refinement_steps: 6
+  refinement_strategy: confidence
+  remask_fraction: 0.35
+preference_learning:
+  enabled: false
+  status: dpo_ready_interface_only
+  required_evidence: completed_blind_pairwise_preferences

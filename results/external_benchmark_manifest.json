@@ -1,0 +1,48 @@
+{
+  "schema": "project1_external_benchmark_manifest_v1",
+  "generated_at_utc": "2026-07-07T06:23:50+00:00",
+  "rows": [
+    {
+      "benchmark_id": "bcfb_bach_related_source_pilot",
+      "source": "Bach Chorales Figured Bass (BCFB) dataset",
+      "status": "pilot_complete",
+      "selection_criteria": "Selected top-level MusicXML files from a Bach-related source package.",
+      "license_filtering_status": "CC-BY-4.0",
+      "selected_files": 143,
+      "parsed_files": 143,
+      "encoded_satb_candidates": 143,
+      "split_counts": "{\"test\": 15, \"train\": 114, \"val\": 14}",
+      "allowed_claim": "source-chain pilot on Bach-related chorale material",
+      "forbidden_claim": "external-repertory robustness or non-Bach generalization",
+      "evidence": "results/project1_external_dataset_summary_latest.json"
+    },
+    {
+      "benchmark_id": "cpdl_candidate_subset_pilot",
+      "source": "Choral Public Domain Library (CPDL)",
+      "status": "pilot_complete",
+      "selection_criteria": "Automatically selected CPDL SATB-category MusicXML/MXL candidates.",
+      "license_filtering_status": "candidate-source only; public-domain and copyright filtering require manual curation",
+      "selected_files": 40,
+      "parsed_files": 40,
+      "encoded_satb_candidates": 30,
+      "split_counts": "{\"test\": 3, \"train\": 24, \"val\": 3}",
+      "allowed_claim": "small automatically selected non-Bach source-chain pilot",
+      "forbidden_claim": "representative CPDL robustness, expert preference, or license-cleared benchmark",
+      "evidence": "results/project1_cpdl_external_dataset_summary_expanded.json"
+    },
+    {
+      "benchmark_id": "curated_public_domain_external_benchmark",
+      "source": "CPDL and other public-domain MusicXML sources",
+      "status": "protocol_pending_curation",
+      "selection_criteria": "Manual public-domain/license screening, SATB candidate detection, duplicate removal, metadata audit, fixed split.",
+      "license_filtering_status": "pending",
+      "selected_files": "",
+      "parsed_files": "",
+      "encoded_satb_candidates": "",
+      "split_counts": "",
+      "allowed_claim": "formal external-source benchmark only after curation and locked split",
+      "forbidden_claim": "generalization before benchmark curation is complete",
+      "evidence": "external_benchmark_protocol.md"
+    }
+  ]
+}

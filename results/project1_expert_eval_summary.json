@@ -1,0 +1,115 @@
+{
+  "rating_files": [],
+  "rating_file_count": 0,
+  "absolute_completed_rows": 0,
+  "paired_completed_rows": 0,
+  "status": "expert evaluation pending",
+  "absolute": {
+    "和声正确性_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    },
+    "声部进行与对位正确性_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    },
+    "七和弦解决正确性_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    },
+    "终止式质量_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    },
+    "SATB可唱性_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    },
+    "传统众赞歌风格一致性_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    },
+    "作曲和声教学用途_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    },
+    "整体质量_1到5": {
+      "n": 0.0,
+      "mean": 0.0
+    }
+  },
+  "paired": {
+    "和声方面更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    },
+    "声部进行方面更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    },
+    "七和弦解决方面更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    },
+    "终止式方面更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    },
+    "SATB可唱性更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    },
+    "风格一致性更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    },
+    "教学用途更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    },
+    "总体更好者": {
+      "A_strongly": 0.0,
+      "A_slightly": 0.0,
+      "tie": 0.0,
+      "B_slightly": 0.0,
+      "B_strongly": 0.0,
+      "uncertain": 0.0,
+      "n": 0.0
+    }
+  }
+}

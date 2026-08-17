@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "Complete the author and release fields before publication."
+title: "Constraint-Integrated Hierarchical Score-to-Score Transformer for Explainable SATB Harmonization"
+type: software
+repository-code: "https://github.com/niuyupeng/yinyue3"
+abstract: >-
+  Reproducible research code and manuscript artifacts for explainable,
+  score-level SATB choral harmonization with hierarchical neural modeling,
+  symbolic rule diagnostics, and constraint-aware decoding.
+license: "TBD"
+version: "TBD"
+date-released: "TBD"
+authors:
+  - family-names: "TBD"
+    given-names: "TBD"
+    orcid: "TBD"

@@ -1,0 +1,1 @@
+Figure 7. Blind expert-evaluation protocol. Source data: expert_eval/project1/sci_blind_protocol_packet/rating_form.csv. The repository contains the blank rating form and dimensions, but no returned expert ratings. Therefore no expert mean, confidence interval, inter-rater reliability, or preference claim is reported.

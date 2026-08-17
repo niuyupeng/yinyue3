@@ -103,6 +103,104 @@ def apply_constraint_reranking(
     return reranked
 
 
+def apply_constrained_beam_search(
+    tokens: np.ndarray,
+    logits: torch.Tensor | np.ndarray,
+    target_mask: np.ndarray,
+    tokenizer: ScoreTokenizer,
+    length: int | None = None,
+    harmonic_labels: dict | None = None,
+    beam_size: int = 3,
+    top_k: int = 3,
+    max_row_candidates: int = 32,
+    rule_weight: float = 1.0,
+    harmony_weight: float = 0.25,
+    temporal_weight: float = 1.0,
+    seventh_weight: float = 1.0,
+) -> np.ndarray:
+    """Decode target positions with a small neural-proposal constrained beam.
+
+    The search is deliberately bounded for RTX 4060-class runs. It keeps a few
+    score prefixes and scores each row with neural negative log likelihood plus
+    transparent soft constraints. This is stronger than independent local
+    reranking, but it is not a complete ILP/CP-SAT solver.
+    """
+    decoded = tokenizer.sanitize_for_export(tokens, length=length)
+    if length is None:
+        length = decoded.shape[0]
+    length = min(int(length), decoded.shape[0])
+    logits_np = logits.detach().cpu().numpy() if torch.is_tensor(logits) else np.asarray(logits)
+    target_mask = np.asarray(target_mask, dtype=bool)
+    if logits_np.ndim == 4:
+        logits_np = logits_np[0]
+    if target_mask.ndim == 3:
+        target_mask = target_mask[0]
+    beam_size = max(1, int(beam_size))
+    top_k = max(1, int(top_k))
+    max_row_candidates = max(1, int(max_row_candidates))
+
+    seed_midi = tokenizer.expand_holds(decoded, length=length)
+    chord_roots = None
+    is_seventh = None
+    is_dominant = None
+    key_tonic_pc = None
+    if harmonic_labels:
+        chord_roots = np.asarray(harmonic_labels.get("chord_roots", np.full(length, -1)))[:length]
+        is_seventh = np.asarray(harmonic_labels.get("is_seventh_chord", np.zeros(length, dtype=bool)))[:length]
+        is_dominant = np.asarray(harmonic_labels.get("is_dominant_function", np.zeros(length, dtype=bool)))[:length]
+        key_tonic_pc = _safe_pc(harmonic_labels.get("key_tonic_pc"))
+
+    beam: list[tuple[float, np.ndarray, np.ndarray | None]] = [(0.0, decoded.copy(), None)]
+    for t in range(length):
+        voices_to_fill = [v for v in range(4) if target_mask[t, v]]
+        next_beam: list[tuple[float, np.ndarray, np.ndarray]] = []
+        for prefix_score, prefix_tokens, previous_row in beam:
+            for row_tokens, candidate_row, nll_cost in _beam_row_candidates(
+                prefix_tokens,
+                seed_midi[t],
+                logits_np[t],
+                voices_to_fill,
+                tokenizer,
+                top_k=top_k,
+                max_row_candidates=max_row_candidates,
+            ):
+                candidate_tokens = prefix_tokens.copy()
+                for voice_idx, token in row_tokens.items():
+                    candidate_tokens[t, voice_idx] = token
+                rule_cost = local_rule_cost(candidate_row)
+                harmony_cost = 0.0
+                if chord_roots is not None:
+                    harmony_cost = local_harmony_cost(
+                        candidate_row,
+                        int(chord_roots[t]),
+                        bool(is_seventh[t]) if is_seventh is not None else False,
+                        bool(is_dominant[t]) if is_dominant is not None else False,
+                    )
+                temporal_cost = temporal_voice_leading_cost(previous_row, candidate_row, key_tonic_pc=key_tonic_pc)
+                seventh_cost = seventh_resolution_transition_cost(
+                    previous_row,
+                    candidate_row,
+                    previous_chord_root=int(chord_roots[t - 1]) if chord_roots is not None and t > 0 else -1,
+                    current_chord_root=int(chord_roots[t]) if chord_roots is not None else -1,
+                    previous_is_seventh=bool(is_seventh[t - 1]) if is_seventh is not None and t > 0 else False,
+                    current_is_seventh=bool(is_seventh[t]) if is_seventh is not None else False,
+                )
+                total = (
+                    prefix_score
+                    + float(nll_cost)
+                    + rule_weight * rule_cost
+                    + harmony_weight * harmony_cost
+                    + temporal_weight * temporal_cost
+                    + seventh_weight * seventh_cost
+                )
+                next_beam.append((float(total), candidate_tokens, candidate_row))
+        next_beam.sort(key=lambda item: item[0])
+        beam = next_beam[:beam_size]
+    if not beam:
+        return decoded
+    return beam[0][1]
+
+
 def apply_rule_guided_decoding(tokens: np.ndarray, tokenizer: ScoreTokenizer, length: int | None = None) -> np.ndarray:
     """Apply lightweight symbolic repairs after neural decoding.
 
@@ -138,6 +236,34 @@ def apply_rule_guided_decoding(tokens: np.ndarray, tokenizer: ScoreTokenizer, le
             repaired[t, voice_idx] = tokenizer.midi_to_token(int(round(pitch)))
 
     return repaired
+
+
+def _beam_row_candidates(
+    prefix_tokens: np.ndarray,
+    seed_row: np.ndarray,
+    row_logits: np.ndarray,
+    voices_to_fill: list[int],
+    tokenizer: ScoreTokenizer,
+    top_k: int,
+    max_row_candidates: int,
+) -> list[tuple[dict[int, int], np.ndarray, float]]:
+    if not voices_to_fill:
+        return [({}, seed_row.copy(), 0.0)]
+    candidate_lists = [top_pitch_candidates(row_logits[voice_idx], tokenizer, top_k=top_k) for voice_idx in voices_to_fill]
+    if not all(candidate_lists):
+        return [({}, seed_row.copy(), 0.0)]
+    rows: list[tuple[dict[int, int], np.ndarray, float]] = []
+    for combo in product(*candidate_lists):
+        candidate_row = seed_row.copy()
+        row_tokens: dict[int, int] = {}
+        nll_cost = 0.0
+        for voice_idx, (token, midi_pitch, nll) in zip(voices_to_fill, combo):
+            row_tokens[voice_idx] = int(token)
+            candidate_row[voice_idx] = float(midi_pitch)
+            nll_cost += float(nll)
+        rows.append((row_tokens, candidate_row, nll_cost))
+    rows.sort(key=lambda item: item[2] + local_rule_cost(item[1]))
+    return rows[:max_row_candidates]
 
 
 def top_pitch_candidates(logits: np.ndarray, tokenizer: ScoreTokenizer, top_k: int = 4) -> list[tuple[int, int, float]]:

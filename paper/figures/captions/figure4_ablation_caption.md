@@ -1,0 +1,1 @@
+Figure 4. Component ablations for the soprano-to-SATB Bach task. Source data: results/project1_metrics.csv and results/experiment_matrix.csv. Completed rows are single-seed ablations unless otherwise stated. The CIH-specific no-constrained-decoding ablation is pending and is shown without a bar. No confidence interval or significance test is included.

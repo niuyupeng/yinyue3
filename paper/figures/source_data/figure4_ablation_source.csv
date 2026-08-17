@@ -1,0 +1,19 @@
+claim_boundary,figure,metric,metric_label,panel,seed_count,source_file,status,task,value,variant_key,variant_label
+single plotted row; multiseed summary exists separately,Figure 4,pitch_accuracy,Pitch accuracy,pitch_accuracy,1,results/project1_metrics.csv,available,soprano_to_satb,0.823273589878756,full,Full
+single plotted row; multiseed summary exists separately,Figure 4,rule_violations_per_100_timesteps,Rule flags/100,rule_violations_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,3.782287822878229,full,Full
+single plotted row; multiseed summary exists separately,Figure 4,parallel_octaves_per_100_timesteps,P8/100,parallel_octaves_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,0.0790722192936215,full,Full
+single-seed ablation,Figure 4,pitch_accuracy,Pitch accuracy,pitch_accuracy,1,results/project1_metrics.csv,available,soprano_to_satb,0.7716130732735899,no_harmony,No harmony
+single-seed ablation,Figure 4,rule_violations_per_100_timesteps,Rule flags/100,rule_violations_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,57.74907749077491,no_harmony,No harmony
+single-seed ablation,Figure 4,parallel_octaves_per_100_timesteps,P8/100,parallel_octaves_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,2.886136004217185,no_harmony,No harmony
+single-seed ablation,Figure 4,pitch_accuracy,Pitch accuracy,pitch_accuracy,1,results/project1_metrics.csv,available,soprano_to_satb,0.824635389211035,no_voice_relation,No voice relation
+single-seed ablation,Figure 4,rule_violations_per_100_timesteps,Rule flags/100,rule_violations_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,65.47179757511861,no_voice_relation,No voice relation
+single-seed ablation,Figure 4,parallel_octaves_per_100_timesteps,P8/100,parallel_octaves_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,11.333684765419083,no_voice_relation,No voice relation
+single-seed ablation,Figure 4,pitch_accuracy,Pitch accuracy,pitch_accuracy,1,results/project1_metrics.csv,available,soprano_to_satb,0.8248550342646284,no_refinement,No refinement
+single-seed ablation,Figure 4,rule_violations_per_100_timesteps,Rule flags/100,rule_violations_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,61.729045861887194,no_refinement,No refinement
+single-seed ablation,Figure 4,parallel_octaves_per_100_timesteps,P8/100,parallel_octaves_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,8.315761729045862,no_refinement,No refinement
+single-seed ablation of the current rule-guided decoder,Figure 4,pitch_accuracy,Pitch accuracy,pitch_accuracy,1,results/project1_metrics.csv,available,soprano_to_satb,0.8238007380073801,no_rules,No rules
+single-seed ablation of the current rule-guided decoder,Figure 4,rule_violations_per_100_timesteps,Rule flags/100,rule_violations_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,32.617290458618875,no_rules,No rules
+single-seed ablation of the current rule-guided decoder,Figure 4,parallel_octaves_per_100_timesteps,P8/100,parallel_octaves_per_100_timesteps,1,results/project1_metrics.csv,available,soprano_to_satb,3.215603584607275,no_rules,No rules
+Must compare to the same checkpoint/config family.,Figure 4,pitch_accuracy,Pitch accuracy,pitch_accuracy,0,,planned_config_pending,soprano_to_satb,,no_constrained_decoding,No constrained decoding
+Must compare to the same checkpoint/config family.,Figure 4,rule_violations_per_100_timesteps,Rule flags/100,rule_violations_per_100_timesteps,0,,planned_config_pending,soprano_to_satb,,no_constrained_decoding,No constrained decoding
+Must compare to the same checkpoint/config family.,Figure 4,parallel_octaves_per_100_timesteps,P8/100,parallel_octaves_per_100_timesteps,0,,planned_config_pending,soprano_to_satb,,no_constrained_decoding,No constrained decoding

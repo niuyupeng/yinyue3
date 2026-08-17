@@ -215,10 +215,7 @@ def extract_satb_parts(score: stream.Score) -> list[stream.Part]:
 
     normalized: dict[str, stream.Part] = {}
     for part in parts:
-        label = " ".join(
-            str(x or "")
-            for x in (part.partName, part.partAbbreviation, part.id)
-        ).lower()
+        label = part_label(part)
         for voice in VOICE_NAMES:
             if voice in label and voice not in normalized:
                 normalized[voice] = part
@@ -226,10 +223,23 @@ def extract_satb_parts(score: stream.Score) -> list[stream.Part]:
     if all(voice in normalized for voice in VOICE_NAMES):
         return [normalized[voice] for voice in VOICE_NAMES]
 
+    generic_voice_parts = [part for part in parts if is_generic_voice_part(part)]
+    if len(generic_voice_parts) >= 4:
+        return generic_voice_parts[:4]
+
     if len(parts) >= 4:
         return parts[:4]
 
     raise ValueError("Could not identify four SATB parts")
+
+
+def part_label(part: stream.Part) -> str:
+    return " ".join(str(x or "") for x in (part.partName, part.partAbbreviation, part.id)).lower()
+
+
+def is_generic_voice_part(part: stream.Part) -> bool:
+    label = part_label(part)
+    return "voice" in label or "vocal" in label
 
 
 def tokens_to_score(

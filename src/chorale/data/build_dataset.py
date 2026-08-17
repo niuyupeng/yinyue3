@@ -160,11 +160,12 @@ def build_dataset_from_config(config: dict, max_chorales_override: int | None = 
     max_chorales = max_chorales_override
     if max_chorales is None:
         max_chorales = data_cfg.get("max_chorales")
+    seq_len = data_cfg.get("max_seq_len", data_cfg.get("seq_len", config.get("seq_len", 256)))
     tokenizer = ScoreTokenizer(
         grid_quarter_length=data_cfg.get("grid_quarter_length", 0.25),
         min_midi=data_cfg.get("min_midi", 36),
         max_midi=data_cfg.get("max_midi", 84),
-        max_seq_len=data_cfg.get("max_seq_len", 256),
+        max_seq_len=int(seq_len),
     )
 
     external = data_cfg.get("external_xml_dir")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
 
 import numpy as np
 import torch
@@ -49,6 +50,8 @@ class ChoraleDataset(Dataset):
         is_phrase_end = self._array_or_default("is_phrase_end", source_idx, np.zeros(tokens.shape[0], dtype=bool))
         chord_label_known = self._array_or_default("chord_label_known", source_idx, np.zeros(tokens.shape[0], dtype=bool))
         roman_numeral_known = self._array_or_default("roman_numeral_known", source_idx, np.zeros(tokens.shape[0], dtype=bool))
+        chord_qualities = self._array_or_default("chord_qualities", source_idx, np.full(tokens.shape[0], "UNKNOWN", dtype="<U32"))
+        roman_numerals = self._array_or_default("roman_numerals", source_idx, np.full(tokens.shape[0], "UNKNOWN", dtype="<U32"))
 
         valid = np.zeros_like(tokens, dtype=bool)
         valid[:length, :] = tokens[:length, :] != self.tokenizer.PAD
@@ -89,6 +92,8 @@ class ChoraleDataset(Dataset):
             "is_phrase_end": torch.from_numpy(np.asarray(is_phrase_end, dtype=bool)).bool(),
             "chord_label_known": torch.from_numpy(np.asarray(chord_label_known, dtype=bool)).bool(),
             "roman_numeral_known": torch.from_numpy(np.asarray(roman_numeral_known, dtype=bool)).bool(),
+            "chord_quality_ids": torch.from_numpy(stable_label_ids(chord_qualities, buckets=63)).long(),
+            "roman_numeral_ids": torch.from_numpy(stable_label_ids(roman_numerals, buckets=127)).long(),
             "length": torch.tensor(length, dtype=torch.long),
             "source_index": torch.tensor(source_idx, dtype=torch.long),
             "name": name,
@@ -119,6 +124,20 @@ class ChoraleDataset(Dataset):
             "roman_numeral_known": self._array_or_default("roman_numeral_known", source_idx, np.zeros(max_seq_len, dtype=bool)),
             "length": np.int64(length),
         }
+
+
+def stable_label_ids(labels: np.ndarray, buckets: int) -> np.ndarray:
+    """Map automatic harmonic strings to stable ids with 0 reserved for UNKNOWN."""
+    values = np.asarray(labels).astype(str)
+    ids = np.zeros(values.shape, dtype=np.int64)
+    for index, raw_value in np.ndenumerate(values):
+        value = str(raw_value).strip()
+        if not value or value.upper() == "UNKNOWN":
+            ids[index] = 0
+            continue
+        digest = hashlib.blake2b(value.encode("utf-8"), digest_size=4).digest()
+        ids[index] = 1 + (int.from_bytes(digest, "little") % max(1, int(buckets)))
+    return ids
 
 
 def dataset_metadata(processed_path: str | Path) -> dict[str, int | float]:

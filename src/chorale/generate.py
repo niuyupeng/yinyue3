@@ -9,12 +9,17 @@ from torch.utils.data import DataLoader
 
 from chorale.data.build_dataset import build_dataset_from_config
 from chorale.data.chorale_dataset import ChoraleDataset
+from chorale.constraint_decoding.constrained_beam import apply_cih_constrained_beam_search
 from chorale.decoding import decode_predictions
 from chorale.export_musicxml import export_tokens_to_musicxml
 from chorale.models.rule_baseline import RuleBaseline
 from chorale.theory.explain_report import build_explanation_report, write_explanation_report
 from chorale.theory.roman_numeral import annotate_tokens_harmony
-from chorale.theory.rule_guided_decoding import apply_constraint_reranking, apply_rule_guided_decoding
+from chorale.theory.rule_guided_decoding import (
+    apply_constrained_beam_search,
+    apply_constraint_reranking,
+    apply_rule_guided_decoding,
+)
 from chorale.train import batch_to_device, build_model
 from chorale.utils import ensure_dir, get_device, load_config, safe_torch_load
 
@@ -47,9 +52,10 @@ def generate(
     refinement_strategy = str(decoding_cfg.get("refinement_strategy", "confidence"))
     remask_fraction = float(decoding_cfg.get("remask_fraction", 0.35))
     constraints_cfg = config.get("constraints", {})
+    constraint_decoder_cfg = config.get("constraint_decoder", {})
 
     model = None
-    device = get_device()
+    device = get_device(config.get("device"))
     checkpoint_path = Path(checkpoint_path) if checkpoint_path else Path(config["run"]["output_dir"]) / "best.pt"
     if checkpoint_path.exists():
         checkpoint = safe_torch_load(checkpoint_path, map_location=device)
@@ -84,7 +90,50 @@ def generate(
         else:
             generated = baseline.harmonize(batch["input_tokens"][0].numpy(), length=length)
         generated = ds.tokenizer.sanitize_for_export(generated, length=length)
-        if model is not None and bool(constraints_cfg.get("use_constraint_reranking", False)):
+        use_constrained_beam = bool(constraints_cfg.get("use_constrained_beam_search", False)) or str(
+            constraints_cfg.get("decoder", "")
+        ) == "constrained_beam"
+        use_cih_constraint_decoder = bool(constraint_decoder_cfg.get("enabled", False)) and str(
+            constraint_decoder_cfg.get("backend", "beam")
+        ) == "beam"
+        if model is not None and use_cih_constraint_decoder:
+            generated = apply_cih_constrained_beam_search(
+                generated,
+                decode_logits[0],
+                batch["target_mask"][0].numpy(),
+                ds.tokenizer,
+                length=length,
+                harmonic_labels=source_harmony,
+                beam_size=int(constraint_decoder_cfg.get("beam_size", 8)),
+                top_k=int(constraint_decoder_cfg.get("top_k", 12)),
+                max_row_candidates=int(constraint_decoder_cfg.get("max_row_candidates", 96)),
+                lambda_rule=float(constraint_decoder_cfg.get("lambda_rule", 1.0)),
+                hard_constraints=list(constraint_decoder_cfg.get("hard_constraints", [])),
+                soft_constraint_weights=dict(constraint_decoder_cfg.get("soft_constraint_weights", {})),
+            )
+        elif model is not None and use_constrained_beam:
+            generated = apply_constrained_beam_search(
+                generated,
+                decode_logits[0],
+                batch["target_mask"][0].numpy(),
+                ds.tokenizer,
+                length=length,
+                harmonic_labels=source_harmony,
+                beam_size=int(constraints_cfg.get("beam_size", 3)),
+                top_k=int(constraints_cfg.get("beam_top_k", constraints_cfg.get("rerank_top_k", 3))),
+                max_row_candidates=int(constraints_cfg.get("max_row_candidates", 32)),
+                rule_weight=float(constraints_cfg.get("beam_rule_weight", constraints_cfg.get("rerank_rule_weight", 1.0))),
+                harmony_weight=float(
+                    constraints_cfg.get("beam_harmony_weight", constraints_cfg.get("rerank_harmony_weight", 0.25))
+                ),
+                temporal_weight=float(
+                    constraints_cfg.get("beam_temporal_weight", constraints_cfg.get("rerank_temporal_weight", 1.0))
+                ),
+                seventh_weight=float(
+                    constraints_cfg.get("beam_seventh_weight", constraints_cfg.get("rerank_seventh_weight", 1.0))
+                ),
+            )
+        elif model is not None and bool(constraints_cfg.get("use_constraint_reranking", False)):
             generated = apply_constraint_reranking(
                 generated,
                 decode_logits[0],

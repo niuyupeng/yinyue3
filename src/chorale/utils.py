@@ -41,10 +41,19 @@ def set_seed(seed: int) -> None:
     torch.backends.cudnn.deterministic = True
 
 
-def get_device() -> torch.device:
+def get_device(preferred: str | None = None) -> torch.device:
     import torch
 
-    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    requested = (preferred or os.environ.get("CHORALE_DEVICE") or "auto").strip().lower()
+    if requested in {"auto", ""}:
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if requested.startswith("cuda"):
+        if not torch.cuda.is_available():
+            raise RuntimeError("CUDA was requested but torch.cuda.is_available() is false")
+        return torch.device(requested)
+    if requested == "cpu":
+        return torch.device("cpu")
+    raise ValueError(f"Unknown device preference: {preferred}")
 
 
 def write_json(data: Mapping[str, Any], path: str | Path) -> None:

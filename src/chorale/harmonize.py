@@ -22,7 +22,6 @@ from chorale.data.score_tokenizer import (
 from chorale.decoding import decode_predictions
 from chorale.export_musicxml import export_tokens_to_musicxml
 from chorale.harmonization_quality import evaluate_harmonization_quality
-from chorale.playback_render import PlaybackRenderSettings, render_musicxml_to_audio
 from chorale.score_preflight import analyze_score_input
 from chorale.symbolic_repair import apply_final_authentic_cadence, optimize_symbolic_postprocess
 from chorale.theory.explain_report import build_explanation_report, write_explanation_report
@@ -294,6 +293,8 @@ def harmonize_musicxml(
 
     audio: dict[str, Any] = {"requested": bool(render_audio)}
     if render_audio:
+        from chorale.playback_render import PlaybackRenderSettings, render_musicxml_to_audio
+
         wav_path = output_dir / f"{stem}_satb_harmonized.wav"
         mp3_path = output_dir / f"{stem}_satb_harmonized.mp3"
         render_result = render_musicxml_to_audio(
